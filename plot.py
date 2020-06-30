@@ -10,6 +10,8 @@ data = pd.read_csv(sys.argv[-1])
 data2 = pd.read_csv(sys.argv[-2])
 data3 = pd.read_csv(sys.argv[-3])
 
+
+
 data = data[16:-10]
 data = data.rename(columns={'Address': "time", 'USB0::0x2A8D::0x0101::MY59001058::0::INSTR': "power"})
 data["power"] = pd.to_numeric(data["power"], downcast="float")
@@ -24,17 +26,30 @@ np1 = np.array(data['power'])*5
 np2 = np.array(data2['power'])*5
 np3 = np.array(data3['power'])*5
 
+np1 = np1[:2500]
+np2 = np2[:2500]
+np3 = np3[:2500]
+
 max_x = np.amax(np.array([np1.shape[0], np2.shape[0], np3.shape[0]]))
 # x = np.arange(max_x)
 
 arrs = [np1, np2, np3]
 
+tick_seconds = 180
+tick, tick_labels = [], []
+for i in range(max_x):
+    if i%tick_seconds == 0:
+        tick.append(i)
+        tick_labels.append((i//tick_seconds))	
+
+
 plt.figure(figsize=(14,6))
 for i, val in enumerate(arrs):
     plt.plot(np.arange(val.shape[0]), val, linewidth=1, alpha=0.5, label="run: " + str(i))
 plt.ylabel('Watts', fontsize=20)
-plt.xlabel('time', fontsize=20)
-plt.title("Numpy Test Suite", fontsize=20)
+plt.xlabel('time (minutes)', fontsize=20)
+plt.xticks(tick, tick_labels)
+plt.title("Scipy Test Suite", fontsize=20)
 plt.legend()
 plt.show()
 
