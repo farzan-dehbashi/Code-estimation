@@ -25,10 +25,10 @@ np1 = np.array(data['power'])*5
 np2 = np.array(data2['power'])*5
 np3 = np.array(data3['power'])*5
 
-
-np1 = np1[:2500]
-np2 = np2[:2500]
-np3 = np3[:2500]
+min_x = np.amin(np.array([np1.shape[0], np2.shape[0], np3.shape[0]]))
+np1 = np1[:min_x]
+np2 = np2[:min_x]
+np3 = np3[:min_x]
 
 max_x = np.amax(np.array([np1.shape[0], np2.shape[0], np3.shape[0]]))
 max_y = max([np.amax(np1), np.amax(np2), np.amax(np3)])
@@ -36,10 +36,11 @@ min_y = min([np.amin(np1), np.amin(np2), np.amin(np3)])
 
 x = np.arange(max_x)
 
-tick_seconds = 180
+tick_seconds = 180 #180 = 1 min
+increment = 100
 tick, tick_labels = [], []
 for i in range(max_x):
-    if i%tick_seconds == 0:
+    if i%tick_seconds == 0 and (i//tick_seconds)%increment == 0:
         tick.append(i)
         tick_labels.append((i//tick_seconds))
 
@@ -52,12 +53,12 @@ dt = 0.01
 t = np.arange(0, 30, dt)
 
 
-ax1.set_title('Numpy')
+ax1.set_title('Sympy')
 ax1.plot(x, np1)
 ax1.set_ylim(min_y, max_y)
 ax1.set_xticks(tick)
 ax1.set_xticklabels(tick_labels)
-ax1.set_xlabel('time')
+ax1.set_xlabel('time (minutes)')
 ax1.set_ylabel('Watts')
 # ax1.grid(True)
 
@@ -66,7 +67,7 @@ ax2.plot(x, np2)
 ax2.set_ylim(min_y, max_y)
 ax2.set_xticks(tick)
 ax2.set_xticklabels(tick_labels)
-ax2.set_xlabel('time')
+ax2.set_xlabel('time (minutes)')
 ax2.set_ylabel('Watts')
 
 # ax2.set_ylabel('CSD (db)')
@@ -74,6 +75,6 @@ ax3.plot(x, np3)
 ax3.set_ylim(min_y, max_y)
 ax3.set_xticks(tick)
 ax3.set_xticklabels(tick_labels)
-ax3.set_xlabel('time')
+ax3.set_xlabel('time (minutes)')
 ax3.set_ylabel('Watts')
 plt.show()
