@@ -149,7 +149,7 @@ def compare(timeslice, data, tests, start, stop):
         in_range.append(np.count_nonzero(temp_val > 0))
 
     # ----- this shows the segment of interest in a subplot showing the entire test sequence for reference -----
-    plotSubplotandReference(data, timeslice, start, stop, tests)
+    # plotSubplotandReference(data, timeslice, start, stop, tests)
 
     tau = 0.6
     # print(np.mean(in_range))
@@ -251,8 +251,8 @@ def analyze(data_arrs):
             similar_test_arr.append(similar_tests)
         start+=step
         stop+=step
-        if start == 800: #------ early stop
-            exit()
+        # if start == 800: #------ early stop
+        #     exit()
 
     if len(similar_trace_arr) > 0:
         similar_traces = np.concatenate(similar_trace_arr, axis=0)
@@ -345,12 +345,14 @@ def getData(filepath):
 
     return [power, power_time, test_start, test_name, paths, paths_times] #[np1, lines, line_labels, tick, tick_labels, np1_time]
 
-data_arrs = []
-for p in sys.argv:
-    if p[:3] != 'par':
+def buildDataset(paths):
+    data_arrs = []
+    for p in paths:
+        print(p)
         data_arrs.append(getData(p))
 
 
 
-similar_traces, similar_tests = analyze(data_arrs)
-# subplots(data_arrs)
+    similar_traces, similar_tests = analyze(data_arrs)
+    # subplots(data_arrs)
+    return similar_traces, similar_tests
