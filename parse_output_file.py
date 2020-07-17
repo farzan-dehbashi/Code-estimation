@@ -119,61 +119,44 @@ def parseExperiment(test_start, line_labels,path, paths):
 
     return power, power_time
 
-    # print(test_start)
-    # exit()
-    # test_start = np.array(test_start) + (start_time - first_time_powermeter)
 
-    # tick_seconds = 180 #180 = 1 min
-    # increment = 100
-    # tick, tick_labels = [], []
-    # for i in range(np1.shape[0]):
-    #     if i%tick_seconds == 0: # and (i//tick_seconds)%increment == 0:
-    #         tick.append(i)
-    #         tick_labels.append((i//tick_seconds))
-
-
-    # lines = []
-    # time_diffs = []
-    # for i, val in enumerate(np1):
-    #     # time = np1_time[i].split(" ")[1]
-    #     # time_diff = ((int(time[:2]) * 60 * 60) + (int(time[3:5]) * 60) + int(time[6:8])) - start_time
-    #     if val in test_start and val not in time_diffs:
-    #         time_diffs.append(val)
-    #         lines.append(i)
-    #
-    # print(lines)
-    # exit()
-    # return np1, lines, line_labels, tick, tick_labels, np1_time
-
-def compare(slice, data, tests, start, stop):
+def compare(timeslice, data, tests, start, stop):
     ''' This calculates mean and standard deviation along an axis for a given time segment
 
     in:
-        slice: (3, [len of interest])
+        timeslice: (3, [len of interest])
         data: (3, [len of experiment])
         tests: (3, [test strings of interest])
         start: start time within experiment
-        stop: stop time of slice within experiment
+        stop: stop time of timeslice within experiment
 
     returns:
-        in_range: array of how many values of a slice are outside of standard deviation
+        similar_traces: (?, 60) traces that are within standard deviation
+        perc: (?, ) Percentage of samples in trace that are within standard deviation
+        # in_range: array of how many values of a timeslice are outside of standard deviation
 
     '''
 
-    mean = np.mean(slice, axis=0) # 60,
-    std = np.std(slice, axis=0) # 60,
+    mean = np.mean(timeslice, axis=0) # 60,
+    std = np.std(timeslice, axis=0) # 60,
     mean_p_std = mean + std
     mean_m_std = mean - std
 
     in_range = []
-    for i, val in enumerate(slice):
+    for i, val in enumerate(timeslice):
         temp_val = copy.deepcopy(val)
         temp_val[(temp_val < mean_m_std) | (temp_val > mean_p_std)] = -1
         in_range.append(np.count_nonzero(temp_val > 0))
 
     # ----- this shows the segment of interest in a subplot showing the entire test sequence for reference -----
-    plotSubplotandReference(data, slice, start, stop, tests)
-    return np.mean(in_range)
+    plotSubplotandReference(data, timeslice, start, stop, tests)
+
+    tau = 0.6
+    # print(np.mean(in_range))
+    perc = np.array(in_range) / timeslice.shape[1]
+    idx = np.argwhere(perc >= tau)
+    similar_traces = np.squeeze(timeslice[idx], 1)
+    return similar_traces, idx, perc #np.mean(in_range)
 
 def plotSubplotandReference(data, slice, start, stop, tests):
     '''this shows the segment of interest in a subplot showing the entire test sequence for reference'''
@@ -193,18 +176,26 @@ def plotSubplotandReference(data, slice, start, stop, tests):
 # data_arrs = power, power_time, test_start, test_name, paths, paths_times
 def analyze(data_arrs):
     data = []
-    max_length_power = 0
+    min_length_power = 100000000000000
     for i, val in enumerate(data_arrs):
-        if val[0].shape[0] > max_length_power:
-            max_length_power = val[0].shape[0]
+        if val[0].shape[0] < min_length_power:
+            min_length_power = val[0].shape[0]
 
 
-
+    # ------- pad the end with zeros
     all_power_times, all_paths, all_path_times = [], [], []
     for i, val in enumerate(data_arrs):
-        if val[0].shape[0] < max_length_power:
-            power_vals = np.concatenate((np.array(val[0]), np.zeros((max_length_power - val[0].shape[0]))), axis=0)
-            power_times = np.concatenate((np.array(val[1]), np.zeros((max_length_power - val[0].shape[0]))), axis=0)
+        # if val[0].shape[0] < max_length_power:
+        #     power_vals = np.concatenate((np.array(val[0]), np.zeros((max_length_power - val[0].shape[0]))), axis=0)
+        #     power_times = np.concatenate((np.array(val[1]), np.zeros((max_length_power - val[0].shape[0]))), axis=0)
+        # else:
+        #     power_vals = np.array(val[0])
+        #     power_times = np.array(val[1])
+
+        # -------- truncate to shortest length
+        if val[0].shape[0] > min_length_power:
+            power_vals = np.array(val[0])[:min_length_power]
+            power_times = np.array(val[1])[:min_length_power]
         else:
             power_vals = np.array(val[0])
             power_times = np.array(val[1])
@@ -226,17 +217,16 @@ def analyze(data_arrs):
     # plt.show()
     # exit()
 
-    start = 0
-    stop = 60
+    start = data_arrs[2][-1][0] #first test
+    stop = start + 60
     step = 60
-    while stop < data.shape[1]:
+    last_test_time = data_arrs[2][-1][-1]
+    similar_test_arr, similar_trace_arr = [], []
+    while stop < last_test_time:
         power_slice = data[:,start:stop]
         power_time_slice = all_power_times[:,start:stop]
 
-
-
-
-#  ------------ MUST BE A WAY TO DO THIS IS Numpy
+#  ------------ actually prints tests for trace out
 
         last_test = {}
         for i, val in enumerate(power_time_slice):
@@ -251,14 +241,28 @@ def analyze(data_arrs):
             tests.append(test_list)
             # tests.append(np.where(val))
             # print(last_test)
-
         tests = np.array(tests)
+#  ------------ actually prints tests for trace out
+        similar_traces, idx, trace_scores = compare(power_slice, data, tests, start, stop)
 
-        compare_score = compare(power_slice, data, tests, start, stop)
+        similar_tests = np.squeeze(tests[idx], 1)
+        if similar_traces.size > 0:
+            similar_trace_arr.append(similar_traces)
+            similar_test_arr.append(similar_tests)
         start+=step
         stop+=step
-        if start == 1800:
+        if start == 800: #------ early stop
             exit()
+
+    if len(similar_trace_arr) > 0:
+        similar_traces = np.concatenate(similar_trace_arr, axis=0)
+        sim_test = []
+        for i in similar_test_arr:
+            for j in i:
+                sim_test.append(j)
+        similar_tests = np.array(sim_test)
+
+    return similar_traces, similar_tests
 
 
 def getData(filepath):
@@ -348,5 +352,5 @@ for p in sys.argv:
 
 
 
-analyze(data_arrs)
+similar_traces, similar_tests = analyze(data_arrs)
 # subplots(data_arrs)
