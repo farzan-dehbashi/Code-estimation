@@ -53,7 +53,7 @@ dt = 0.01
 t = np.arange(0, 30, dt)
 
 
-ax1.set_title('Sympy')
+ax1.set_title('Scipy')
 ax1.plot(x, np1)
 ax1.set_ylim(min_y, max_y)
 ax1.set_xticks(tick)
