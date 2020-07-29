@@ -33,18 +33,17 @@ if __name__ == "__main__":
     # maybe hardcode paths in here for numpy and scipy
 
     paths = []
-    for i in sys.argv:
-        if i[:4] != 'main':
-            try_paths = [og_path+i+"/"+f+"/"+i+"_timestamp_"+f[3]+".out" for f in listdir(og_path+i+"/") if f[:3] == "try"]
-            paths = paths + try_paths
+    for i in sys.argv[1:]:
+        try_paths = [og_path+i+"/"+f+"/"+i+"_timestamp_"+f[3]+".out" for f in listdir(og_path+i+"/") if f[:3] == "try"]
+        paths = paths + try_paths
 
-    # print(paths)
-            dataset, dataset_tests = parse_output_file.buildDataset(paths)
-            dataset_y = np.zeros((dataset.shape[0], label_size))
-            dataset_y[:,langs[i]] = dataset_y[:,langs[i]] + 1
+# print(paths)
+        dataset, dataset_tests = parse_output_file.buildDataset(paths)
+        dataset_y = np.zeros((dataset.shape[0], label_size))
+        dataset_y[:,langs[i]] = dataset_y[:,langs[i]] + 1
 
-            masterDataset.append(dataset)
-            masterLabels.append(dataset_y)
+        masterDataset.append(dataset)
+        masterLabels.append(dataset_y)
 
     masterDataset = np.concatenate((masterDataset))
     masterLabels = np.concatenate((masterLabels))
