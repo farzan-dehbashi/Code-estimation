@@ -9,6 +9,16 @@ from matplotlib.font_manager import FontProperties
 
 def subplots(data_arrs):
 
+    min_len = np.amin(np.array([data_arrs[0][0].shape, data_arrs[1][0].shape, data_arrs[2][0].shape]))
+    time_labels = []
+    time_ticks = []
+    minute = 180
+    for i in range(min_len):
+        if i%minute == 0:
+            time_labels.append(str(i//minute))
+            time_ticks.append(i)
+
+
     fig, (ax1, ax2, ax3) = plt.subplots(3, 1)
     fig.subplots_adjust(hspace=0.5)
 
@@ -29,10 +39,12 @@ def subplots(data_arrs):
 
 
     ax1.set_title('Numpy')
-    ax1.plot(np.arange(data_arrs[0][0].shape[0]), data_arrs[0][0])
+    ax1.plot(np.arange(min_len), data_arrs[0][0][:min_len])
     ax1.set_ylim(min_y, max_y)
-    for i, xc in enumerate(data_arrs[0][1]):
-        ax1.axvline(x=xc, color=colors[i], label=data_arrs[0][2][i])
+
+    data_arrs[0][3] = data_arrs[0][3][1:]
+    for i, xc in enumerate(data_arrs[0][6]):
+        ax1.axvline(x=xc, color=colors[i], label=str(data_arrs[0][3][i]))
 
     # plt.xticks(tick, tick_labels)
     # plt.xlabel("Minutes")
@@ -40,37 +52,41 @@ def subplots(data_arrs):
     ax1.legend(bbox_to_anchor=(1, 1), loc='upper left', ncol=2)
 
 
-    # ax1.set_ylim(min_y, max_y)
-    ax1.set_xticks(data_arrs[0][3])
-    ax1.set_xticklabels(data_arrs[0][4])
-    ax1.set_xlabel('time (minutes)')
+    ax1.set_ylim(min_y, max_y)
+    ax1.set_xticks(time_ticks)
+    ax1.set_xticklabels(time_labels)
+    ax1.set_xlabel('Time (minutes)')
     ax1.set_ylabel('Watts')
     # ax1.grid(True)
 
     # cxy, f = ax2.csd(s1, s2, 256, 1. / dt)
-    ax2.plot(np.arange(data_arrs[1][0].shape[0]), data_arrs[1][0])
+    ax2.plot(np.arange(min_len), data_arrs[1][0][:min_len])
     ax2.set_ylim(min_y, max_y)
-    for i, xc in enumerate(data_arrs[1][1]):
-        ax2.axvline(x=xc, color=colors[i], label=data_arrs[1][2][i])
+    data_arrs[1][3] = data_arrs[1][3][1:]
+    for i, xc in enumerate(data_arrs[1][6]):
+        ax2.axvline(x=xc, color=colors[i], label=str(data_arrs[1][3][i]))
 
     ax2.legend(bbox_to_anchor=(1, 1), loc='upper left', ncol=2)
-    ax2.set_xticks(data_arrs[1][3])
-    ax2.set_xticklabels(data_arrs[1][4])
-    ax2.set_xlabel('time (minutes)')
+    ax2.set_xticks(time_ticks)
+    ax2.set_xticklabels(time_labels)
+    ax2.set_xlabel('Time (minutes)')
     ax2.set_ylabel('Watts')
 
-    ax3.plot(np.arange(data_arrs[2][0].shape[0]), data_arrs[2][0])
+    ax3.plot(np.arange(min_len), data_arrs[2][0][:min_len])
     ax3.set_ylim(min_y, max_y)
-    for i, xc in enumerate(data_arrs[2][1]):
-        ax3.axvline(x=xc, color=colors[i], label=data_arrs[2][2][i])
+    data_arrs[2][3] = data_arrs[2][3][1:]
+    for i, xc in enumerate(data_arrs[2][6]):
+        ax3.axvline(x=xc, color=colors[i], label=str(data_arrs[2][3][i]))
 
     ax3.legend(bbox_to_anchor=(1, 1), loc='upper left', ncol=2)
-    ax3.set_xticks(data_arrs[2][3])
-    ax3.set_xticklabels(data_arrs[2][4])
-    ax3.set_xlabel('time (minutes)')
+    ax3.set_xticks(time_ticks)
+    ax3.set_xticklabels(time_labels)
+    ax3.set_xlabel('Time (minutes)')
     ax3.set_ylabel('Watts')
 
     plt.show()
+    print("shown")
+    exit()
 
 
 def parseExperiment(test_start, line_labels,path, paths):
@@ -83,6 +99,8 @@ def parseExperiment(test_start, line_labels,path, paths):
     power_time = np.array(data['time'])
 
 
+
+    test_ticks = []
     cut = 0
     start_time = 0
     for i, val in enumerate(power):
@@ -112,12 +130,18 @@ def parseExperiment(test_start, line_labels,path, paths):
 
     power = power[cut:back_cut]
     power_time = power_time[cut:back_cut]
-
+    # test_start, line_labels
+    test_time = []
+    test_start = test_start[1:]
     for i, val in enumerate(power_time):
         time = val.split(" ")[1]
         power_time[i] = ((int(time[:2]) * 60 * 60) + (int(time[3:5]) * 60) + int(time[6:8])) - start_time
+        if len(test_start) > 0:
+            if power_time[i] == test_start[0]:
+                test_time.append(i)
+                test_start = test_start[1:]
 
-    return power, power_time
+    return power, power_time, test_time
 
 
 def compare(timeslice, data, tests, start, stop):
@@ -341,9 +365,9 @@ def getData(filepath):
     # print(len(paths_times))
     # exit()
     # np1, lines, line_labels, tick, tick_labels, np1_time = parseExperiment(test_start, test_name, filepath, paths)
-    power, power_time = parseExperiment(test_start, test_name, filepath, paths)
+    power, power_time, test_time = parseExperiment(test_start, test_name, filepath, paths)
 
-    return [power, power_time, test_start, test_name, paths, paths_times] #[np1, lines, line_labels, tick, tick_labels, np1_time]
+    return [power, power_time, test_start, test_name, paths, paths_times, test_time] #[np1, lines, line_labels, tick, tick_labels, np1_time]
 
 def buildDataset(paths):
     data_arrs = []
@@ -354,5 +378,15 @@ def buildDataset(paths):
 
 
     similar_traces, similar_tests = analyze(data_arrs)
-    # subplots(data_arrs)
     return similar_traces, similar_tests
+
+
+if __name__ == "__main__":
+    data_arrs = []
+    for p in sys.argv[1:]:
+        data_arrs.append(getData(p))
+
+
+    # similar_traces, similar_tests = analyze(data_arrs)
+    subplots(data_arrs)
+    exit()
