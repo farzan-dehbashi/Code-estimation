@@ -19,19 +19,18 @@ class runScipy(object):
     def __init__(self):
         super(runScipy, self).__init__()
         # set functions here
-        # self.funcs = [self.arrayMath,self.funcMinimize,self.funcOptimize, self.roots]
-        self.funcs = [self.funcMinimize,self.funcOptimize, self.roots]
+        self.funcs = [self.arrayMath,self.funcMinimize,self.funcOptimize, self.roots]
 
 
     def callSoft(self,height,width):
-        print("scipy start")
+        print("scipy")
         func_calls = random.randint(1,len(self.funcs))
         arr = self.createArray(height,width)
         funcs_to_run = sample(self.funcs,func_calls)
         for i in funcs_to_run:
             # i should be a function call
             i(arr)
-        print("scipy end")
+        print("scipy")
 
     def createArray(self,h,w):
         return np.random.rand(h,w)
@@ -58,11 +57,9 @@ class runScipy(object):
         sol = optimize.root(self.fun, [0, 0], method='krylov')
         sol = optimize.root(self.fun, [0, 0], method='df-sane')
 
-    # def arrayMath(self, arr=None):
-    #     print("doing fft")
-    #     x = fft.fft(arr)
-    #     x = fft.ifft(arr)
-    #     exit()
+    def arrayMath(self, arr=None):
+        x = fft.fft(arr)
+        x = fft.ifft(arr)
 
     def funcMinimize(self, arr=None):
         res = optimize.minimize_scalar(self.f)
@@ -116,14 +113,14 @@ class runNumpy(object):
 
 
     def callSoft(self,height,width):
-        print("numpy start")
+        print("numpy")
         func_calls = random.randint(1,len(self.funcs))
         arr = self.createArray(height,width)
         funcs_to_run = sample(self.funcs,func_calls)
         for i in funcs_to_run:
             # i should be a function call
             i(arr)
-        print("numpy end")
+        print("numpy")
 
     def createArray(self,h,w):
         return np.random.rand(h,w)
@@ -179,11 +176,11 @@ class runPython(object):
         func_calls = random.randint(1,len(self.funcs))
         arr = self.createArray(height,width)
         funcs_to_run = sample(self.funcs,func_calls)
-        print("python start")
+        print("python")
         for i in funcs_to_run:
             # i should be a function call
             i(arr)
-        print("python end")
+        print("python")
 
 
     def createArray(self,h,w):
@@ -270,6 +267,8 @@ start = time.time()
 length = int(sys.argv[-1])
 max_dim = 100
 
+print("starting")
+
 # loop for "length" seconds
 while((time.time() - start) < length):
 
@@ -279,3 +278,5 @@ while((time.time() - start) < length):
     for h in range(1,heights):
         for w in range(1,widths):
             software.callSoft(h,w)
+
+print("done")
