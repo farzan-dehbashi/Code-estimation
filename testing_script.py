@@ -11,7 +11,7 @@ import scipy
 import time
 import random
 from random import sample
-from scipy import optimize
+from scipy import optimize, fft
 import math
 import sys
 
@@ -58,8 +58,8 @@ class runScipy(object):
         sol = optimize.root(self.fun, [0, 0], method='df-sane')
 
     def arrayMath(self, arr=None):
-        x = scipy.fft.fft(arr)
-        x = scipy.fft.ifft(arr)
+        x = fft.fft(arr)
+        x = fft.ifft(arr)
 
     def funcMinimize(self, arr=None):
         res = optimize.minimize_scalar(self.f)
