@@ -6,9 +6,9 @@ import matplotlib.pyplot as plt
 
 
 def parseData(path):
-    # data = pd.read_csv(path + '.csv')
-    # power = np.array(data[data.columns[1:2]])*5
-    # power_time = np.array(data[data.columns[:1]])
+    # power = np.load(path)
+
+    #
     path = path[:-4]
     data = pd.read_csv(path + '.csv')
     data = data[16:-10]
@@ -17,11 +17,6 @@ def parseData(path):
     power = np.array(data['power'], dtype=np.float32)*5
     power_time = np.array(data['time'], dtype=np.float32)
 
-    # print(power.shape)
-    # print(power_time)
-    # exit()
-    #
-    # return [power, power_time]
     return power
 
 

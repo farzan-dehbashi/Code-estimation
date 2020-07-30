@@ -126,7 +126,7 @@ def parseExperiment_npy(test_start, line_labels,path, paths,lang):
     # plt.show()
     # exit()
 
-    power = power[cut:back_cut]
+    # power = power[cut:back_cut]
     power_time = np.arange(power.shape[0])/1000 #2000 because this was sampled with 2k per-second
     # test_start, line_labels
     test_time = []
@@ -244,44 +244,68 @@ def plotSubplotandReference(data, slice, start, stop, tests):
 
 
 def analyze_fromNumpyArray(data_arrs,lang):
+    compare_same_length = False
+
     data = []
     min_length_power = 100000000000000
     for i, val in enumerate(data_arrs):
+        # print(val[0].shape)
         if val[0].shape[0] < min_length_power:
             min_length_power = val[0].shape[0]
 
-    data, all_power_times = [], []
-    for i, val in enumerate(data_arrs):
-        data.append(val[0][:min_length_power])
-        all_power_times.append(val[1][:min_length_power])
+    # ----- all are about the same length, so compare all of them together
+    if compare_same_length:
+        data, all_power_times = [], []
+        for i, val in enumerate(data_arrs):
+            data.append(val[0][:min_length_power])
+            all_power_times.append(val[1][:min_length_power])
 
-    data = np.array(data)
-    all_power_times = np.array(all_power_times)
+        data = np.array(data)
+        all_power_times = np.array(all_power_times)
 
-    # for i in data:
-    #     plt.plot(np.arange(i.shape[0]), i)
-    # plt.show()
-    # exit()
+        start = 0
+        stop = start + 1000
+        step = 500
+        similar_trace_arr = []
 
-    start = 0
-    stop = start + 1000
-    step = 500
-    similar_trace_arr = []
+        while stop < data.shape[1]:
+            power_slice = data[:,start:stop]
+            power_time_slice = all_power_times[:,start:stop]
 
-    while stop < data.shape[1]:
-        power_slice = data[:,start:stop]
-        power_time_slice = all_power_times[:,start:stop]
+            similar_traces, idx, trace_scores = compare(power_slice, data, start, stop)
 
-        similar_traces, idx, trace_scores = compare(power_slice, data, start, stop)
+            if similar_traces.size > 0:
+                similar_trace_arr.append(similar_traces)
+            start+=step
+            stop+=step
+            # if start == 800: #------ early stop
+            #     exit()
+        if len(similar_trace_arr) > 0:
+            similar_traces = np.concatenate(similar_trace_arr, axis=0)
+    else: # ----- take all samples
+        similar_trace_arr = []
+        for i, val in enumerate(data_arrs):
+            start = 0
+            # stop = start + 1000
+            step = 200
+            idx = []
+            cur = val[0]
+            while cur.shape[0] > 0:
+                if cur.shape[0]%step == 0:
+                    break
+                else:
+                    cur = cur[:-1]
 
-        if similar_traces.size > 0:
-            similar_trace_arr.append(similar_traces)
-        start+=step
-        stop+=step
-        # if start == 800: #------ early stop
-        #     exit()
+            end_idx = step
+            while end_idx < cur.shape[0]:
+                idx.append(end_idx)
+                end_idx+=step
 
-    if len(similar_trace_arr) > 0:
+
+            # similar_traces = np.array(np.split(cur,idx))
+
+            similar_trace_arr.append(np.array(np.split(cur,idx)))
+
         similar_traces = np.concatenate(similar_trace_arr, axis=0)
 
     return similar_traces,[]
