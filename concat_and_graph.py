@@ -17,7 +17,12 @@ def parseData(path):
     power = np.array(data['power'], dtype=np.float32)*5
     power_time = np.array(data['time'], dtype=np.float32)
 
-    return [power, power_time]
+    # print(power.shape)
+    # print(power_time)
+    # exit()
+    #
+    # return [power, power_time]
+    return power
 
 
 
@@ -31,13 +36,49 @@ times = []
 if len(file_data) > 1:
     for i in file_data:
         powers.append(i[0])
-        times.append(i[1])
+        # times.append(i[1])
 
     all_power = np.squeeze(np.concatenate((powers), axis=0))
-    all_times = np.squeeze(np.concatenate((times), axis=0))
+    # all_times = np.squeeze(np.concatenate((times), axis=0))
 else:
-    all_power = file_data[0][0]
-    all_times = file_data[0][1]
+    all_power = file_data[0]
+    # all_times = file_data[0][1]
 
-plt.plot(np.arange(all_power.shape[0]), all_power)
-plt.show()
+idx = np.where(all_power < 1.15)[0]
+diff = np.diff(idx)
+diff = np.concatenate((np.array([0]), diff))
+# diff = np.sort(diff)
+split_idx = np.where(diff > 200000)[0]
+split = idx[split_idx]
+split_m1 = idx[split_idx-1]
+split = np.unique(np.concatenate((split, split_m1)))
+
+# split = idx[diff > 200000]
+# print(idx)
+# print(diff.shape)
+# exit()
+# for i, xc in enumerate(split):
+#     plt.axvline(x=xc, color='r')
+# plt.plot(np.arange(all_power.shape[0]),all_power)
+# plt.show()
+# exit()
+# large = np.where(diff > 200000)[0]
+
+# for i, xc in enumerate(idx):
+#     plt.axvline(x=xc, color='r')
+# plt.plot(np.arange(all_power.shape[0]), all_power)
+# plt.show()
+# exit()
+
+runs = []
+for i in range(1,split.shape[0]):
+    if split[i] - split[i-1] > 250000:
+        runs.append(all_power[split[i-1]:split[i]])
+
+for i,val in enumerate(runs):
+    fname = 'power_cunsumption/2k_per_second_scipy/try'+str(i)+'/scipy_timestamped_try'+str(i)+'.npy'
+    print("saving: ", fname)
+    np.save(fname, val)
+    # print(val.shape)
+    # plt.plot(np.arange(val.shape[0]), val)
+    # plt.show()
