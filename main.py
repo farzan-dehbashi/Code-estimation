@@ -93,6 +93,14 @@ if __name__ == "__main__":
 
         X, y, val_X, val_y, test_X, test_y = balanceDataset(masterDataset, masterLabels)
         dataset = X
+    elif 'load_all' in sys.argv:
+        time = '20200729-233039'
+        X = np.load('datasets/'+ time +'_X.npy' )
+        y = np.load('datasets/'+ time +'_y.npy' )
+        val_X = np.load('datasets/'+ time +'_val_X.npy' )
+        val_y = np.load('datasets/'+ time +'_val_y.npy' )
+        test_X = np.load('datasets/'+ time +'_test_X.npy' )
+        test_y = np.load('datasets/'+ time +'_test_y.npy' )
     else:
 
 
@@ -108,8 +116,8 @@ if __name__ == "__main__":
             dataset_y = np.zeros((dataset.shape[0], label_size))
             dataset_y[:,langs[lang]] = dataset_y[:,langs[lang]] + 1
 
-            # np.save(og_path+lang+'/X_'+lang+'_all.npy', dataset)
-            # np.save(og_path+lang+'/y_'+lang+'_all.npy', dataset_y)
+            np.save(og_path+lang+'/X_'+lang+'_all_200.npy', dataset)
+            np.save(og_path+lang+'/y_'+lang+'_all_200.npy', dataset_y)
             print(lang, " X: ", dataset.shape, " y: ", dataset_y.shape)
 
             masterDataset.append(dataset)
@@ -142,6 +150,12 @@ if __name__ == "__main__":
         # es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=20)
         bidir_mod.fit(X,y, batch_size=32, epochs=1,verbose=1, validation_data=(val_X, val_y)) #, callbacks=[es]
         bidir_mod.save('models/'+str(time_string)+'.h5')
+        np.save('datasets/'+time_string+'_X.npy', X)
+        np.save('datasets/'+time_string+'_y.npy', y)
+        np.save('datasets/'+time_string+'_val_X.npy', val_X)
+        np.save('datasets/'+time_string+'_val_y.npy', val_y)
+        np.save('datasets/'+time_string+'_test_X.npy', test_X)
+        np.save('datasets/'+time_string+'_test_y.npy', test_y)
     else:
         mod = '20200729-233039.h5'
         bidir_mod = networks.bidirectionalLSTM(X, mod)
