@@ -138,6 +138,9 @@ if __name__ == "__main__":
     print(val_X.shape)
     print(val_y.shape)
     # exit()
+    y = np.argmax(y, axis=1)
+    test_y = np.argmax(test_y, axis=1)
+    val_y = np.argmax(val_y, axis=1)
 
     if train:
         time_string = time.strftime("%Y%m%d-%H%M%S")
@@ -157,7 +160,7 @@ if __name__ == "__main__":
         bidir_mod = networks.bidirectionalLSTM(X, mod)
     preds = bidir_mod.predict(test_X)
 
-    flat_preds = np.argmax(preds, axis=1)
+    # flat_preds = np.argmax(preds, axis=1)
     print(flat_preds)
     flat_test_y = np.argmax(test_y, axis=1)
     print(flat_test_y)
