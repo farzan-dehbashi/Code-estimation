@@ -86,8 +86,8 @@ if __name__ == "__main__":
     masterLabels = []
     if "load" in sys.argv:
         for i, lang in enumerate(sys.argv[1:-1]):
-            dataset = np.load(og_path+lang+'/X_'+lang+'_all.npy')
-            dataset_y = np.load(og_path+lang+'/y_'+lang+'_all.npy')
+            dataset = np.load(og_path+lang+'/X_'+lang+'_all_200.npy')
+            dataset_y = np.load(og_path+lang+'/y_'+lang+'_all_200.npy')
             masterDataset.append(dataset)
             masterLabels.append(dataset_y)
 
