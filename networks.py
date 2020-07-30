@@ -49,7 +49,8 @@ def bidirectionalLSTM(dataset, pretrained_weights = None):
     # out = tf.keras.layers.Dense(2, activation='softmax')(bidir) #was 3
 
     in_tensor = tf.keras.layers.Input((n_timesteps,n_block,),name='Input')
-    (lstm, forward_h, forward_c, backward_h, backward_c) = tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(64),return_sequences=True, return_state=True ,name='bi_lstm_0')(in_tensor)
+    lstm = tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(32, return_sequences = True), name="bi_lstm_0")(in_tensor)
+    (lstm, forward_h, forward_c, backward_h, backward_c) = tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(64,return_sequences=True, return_state=True ,name='bi_lstm_1'))(lstm)
     state_h = tf.keras.layers.Concatenate()([forward_h, backward_h])
     state_c = tf.keras.layers.Concatenate()([forward_c, backward_c])
     context_vector, attention_weights = Attention(32)(lstm, state_h)
