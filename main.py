@@ -147,8 +147,9 @@ if __name__ == "__main__":
         bidir_mod = networks.bidirectionalLSTM(X)
 
         # es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=20)
-        bidir_mod.fit(X,y, batch_size=32, epochs=1,verbose=1, validation_data=(val_X, val_y)) #, callbacks=[es]
-        bidir_mod.save('models/'+str(time_string)+'.h5')
+        epochs = 10
+        bidir_mod.fit(X,y, batch_size=32, epochs=epochs,verbose=1, validation_data=(val_X, val_y)) #, callbacks=[es]
+        bidir_mod.save('models/'+str(time_string)+'_epochs'+ str(epochs) +'.h5')
         np.save('datasets/'+time_string+'_X.npy', X)
         np.save('datasets/'+time_string+'_y.npy', y)
         np.save('datasets/'+time_string+'_val_X.npy', val_X)
