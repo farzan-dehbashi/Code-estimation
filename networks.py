@@ -63,7 +63,7 @@ def bidirectionalLSTM(dataset, pretrained_weights = None):
     model = tf.keras.models.Model( in_tensor,  out)
 
 
-    model.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = metrics = ['accuracy'])
+    model.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = ['accuracy'])
     # model.compile(optimizer = tf.keras.optimizers.Adam(lr = 1e-4), loss = 'categorical_crossentropy', metrics = ['accuracy'])
 
     if pretrained_weights is not None:
