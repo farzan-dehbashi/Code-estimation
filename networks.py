@@ -66,14 +66,14 @@ def bidirectionalLSTM(dataset, pretrained_weights = None):
     model = tf.keras.models.Model( in_tensor,  out)
 
     METRICS = [
-    keras.metrics.TruePositives(name='tp'),
-    keras.metrics.FalsePositives(name='fp'),
-    keras.metrics.TrueNegatives(name='tn'),
-    keras.metrics.FalseNegatives(name='fn'),
-    keras.metrics.BinaryAccuracy(name='accuracy'),
-    keras.metrics.Precision(name='precision'),
-    keras.metrics.Recall(name='recall'),
-    keras.metrics.AUC(name='auc'),
+    tf.keras.metrics.TruePositives(name='tp'),
+    tf.keras.metrics.FalsePositives(name='fp'),
+    tf.keras.metrics.TrueNegatives(name='tn'),
+    tf.keras.metrics.FalseNegatives(name='fn'),
+    tf.keras.metrics.BinaryAccuracy(name='accuracy'),
+    tf.keras.metrics.Precision(name='precision'),
+    tf.keras.metrics.Recall(name='recall'),
+    tf.keras.metrics.AUC(name='auc'),
     ]
 
     model.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = METRICS)
