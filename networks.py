@@ -19,7 +19,7 @@ def bidirectionalLSTM(dataset, pretrained_weights = None):
 
     in_tensor = tf.keras.layers.Input((n_timesteps,n_block,),name='Input')
     bidir = tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(20))(in_tensor)
-    out = tf.keras.layers.Dense(3, activation='softmax')(bidir)
+    out = tf.keras.layers.Dense(2, activation='softmax')(bidir) #was 3
 
     model = tf.keras.models.Model( in_tensor,  out)
 
