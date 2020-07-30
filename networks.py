@@ -90,7 +90,7 @@ def CNN_mod(dataset, pretrained_weights = None):
     in_tensor = tf.keras.layers.Input((n_timesteps,n_block,),name='Input')
     cnn = tf.keras.layers.Conv1D(filters=64, kernel_size=10, activation='relu')(in_tensor)
     cnn = tf.keras.layers.Conv1D(filters=128, kernel_size=10, activation='relu')(cnn)
-    drop = tf.keras.layer.Dropout(0.5)(cnn)
+    drop = tf.keras.layers.Dropout(0.5)(cnn)
     out = tf.keras.layers.Dense(1, activation="sigmoid")(drop)
 
 
