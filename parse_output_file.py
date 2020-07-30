@@ -89,6 +89,51 @@ def subplots(data_arrs):
     exit()
 
 
+def parseExperiment_npy(test_start, line_labels,path, paths,lang):
+    path = path[:-4]
+    power = np.load(path + '.npy')
+
+
+    test_ticks = []
+    cut = 0
+    start_time = 0
+    mn = power[0]
+    for i, val in enumerate(power):
+        if i > 0:
+            if i > 500: mn = np.mean(power[(i-500):i])
+            else: mn = np.mean(power[:i])
+        if val > 1.4 and (val - mn) > 0.2:
+            cut = i
+            break
+
+    # numpy test time
+    if lang == 'numpy':
+        test_complete_time = 16*60*1000
+    elif lang == 'scipy':
+        test_complete_time = 12*60*1000
+
+    back_cut = power.shape[0]
+    for i, val in enumerate(power):
+        if i > test_complete_time:
+            mn = np.mean(power[i:(i+500)])
+            if val < 1.4:
+                back_cut = i
+                break
+
+    # plt.plot(np.arange(power.shape[0]), power)
+    # plt.axvline(x=cut, c='r')
+    # plt.axvline(x=back_cut, c='r')
+    # plt.show()
+    # exit()
+
+    power = power[cut:back_cut]
+    power_time = np.arange(power.shape[0])/1000 #2000 because this was sampled with 2k per-second
+    # test_start, line_labels
+    test_time = []
+
+    return power, power_time, test_time
+
+
 def parseExperiment(test_start, line_labels,path, paths):
     path = path[:-4]
     data = pd.read_csv(path + '.csv')
@@ -144,7 +189,7 @@ def parseExperiment(test_start, line_labels,path, paths):
     return power, power_time, test_time
 
 
-def compare(timeslice, data, tests, start, stop):
+def compare(timeslice, data, start, stop, tests=None):
     ''' This calculates mean and standard deviation along an axis for a given time segment
 
     in:
@@ -175,7 +220,7 @@ def compare(timeslice, data, tests, start, stop):
     # ----- this shows the segment of interest in a subplot showing the entire test sequence for reference -----
     # plotSubplotandReference(data, timeslice, start, stop, tests)
 
-    tau = 0.6
+    tau = 0.0
     # print(np.mean(in_range))
     perc = np.array(in_range) / timeslice.shape[1]
     idx = np.argwhere(perc >= tau)
@@ -184,7 +229,7 @@ def compare(timeslice, data, tests, start, stop):
 
 def plotSubplotandReference(data, slice, start, stop, tests):
     '''this shows the segment of interest in a subplot showing the entire test sequence for reference'''
-    print("Tests: ", tests)
+    # print("Tests: ", tests)
     fig, (ax1, ax2) = plt.subplots(2, 1)
     fig.subplots_adjust(hspace=0.5)
     ax1.plot(np.arange(data.shape[1]), data[0])
@@ -196,6 +241,50 @@ def plotSubplotandReference(data, slice, start, stop, tests):
     ax2.plot(np.arange(slice.shape[1]), slice[1])
     ax2.plot(np.arange(slice.shape[1]), slice[2])
     plt.show()
+
+
+def analyze_fromNumpyArray(data_arrs,lang):
+    data = []
+    min_length_power = 100000000000000
+    for i, val in enumerate(data_arrs):
+        if val[0].shape[0] < min_length_power:
+            min_length_power = val[0].shape[0]
+
+    data, all_power_times = [], []
+    for i, val in enumerate(data_arrs):
+        data.append(val[0][:min_length_power])
+        all_power_times.append(val[1][:min_length_power])
+
+    data = np.array(data)
+    all_power_times = np.array(all_power_times)
+
+    # for i in data:
+    #     plt.plot(np.arange(i.shape[0]), i)
+    # plt.show()
+    # exit()
+
+    start = 0
+    stop = start + 1000
+    step = 500
+    similar_trace_arr = []
+
+    while stop < data.shape[1]:
+        power_slice = data[:,start:stop]
+        power_time_slice = all_power_times[:,start:stop]
+
+        similar_traces, idx, trace_scores = compare(power_slice, data, start, stop)
+
+        if similar_traces.size > 0:
+            similar_trace_arr.append(similar_traces)
+        start+=step
+        stop+=step
+        # if start == 800: #------ early stop
+        #     exit()
+
+    if len(similar_trace_arr) > 0:
+        similar_traces = np.concatenate(similar_trace_arr, axis=0)
+
+    return similar_traces,[]
 
 # data_arrs = power, power_time, test_start, test_name, paths, paths_times
 def analyze(data_arrs):
@@ -267,7 +356,7 @@ def analyze(data_arrs):
             # print(last_test)
         tests = np.array(tests)
 #  ------------ actually prints tests for trace out
-        similar_traces, idx, trace_scores = compare(power_slice, data, tests, start, stop)
+        similar_traces, idx, trace_scores = compare(power_slice, data, start, stop, tests)
 
         similar_tests = np.squeeze(tests[idx], 1)
         if similar_traces.size > 0:
@@ -289,7 +378,7 @@ def analyze(data_arrs):
     return similar_traces, similar_tests
 
 
-def getData(filepath):
+def getData(filepath,lang):
     # print("Getting: ", filepath)
     # filepath = sys.argv[-1] #'/power_cunsumption/time_stamped_results/numpy/try0/numpy_timestamp_0.out'
     with open(filepath) as fp:
@@ -365,19 +454,20 @@ def getData(filepath):
     # print(len(paths_times))
     # exit()
     # np1, lines, line_labels, tick, tick_labels, np1_time = parseExperiment(test_start, test_name, filepath, paths)
-    power, power_time, test_time = parseExperiment(test_start, test_name, filepath, paths)
+    # power, power_time, test_time = parseExperiment(test_start, test_name, filepath, paths) #when you have .csvs
+    power, power_time, test_time = parseExperiment_npy(test_start, test_name, filepath, paths,lang) #when you have npy arrays
+
 
     return [power, power_time, test_start, test_name, paths, paths_times, test_time] #[np1, lines, line_labels, tick, tick_labels, np1_time]
 
-def buildDataset(paths):
+def buildDataset(paths,lang=None):
     data_arrs = []
     for p in paths:
         print(p)
-        data_arrs.append(getData(p))
+        data_arrs.append(getData(p,lang))
 
-
-
-    similar_traces, similar_tests = analyze(data_arrs)
+    # similar_traces, similar_tests = analyze(data_arrs)
+    similar_traces, similar_tests = analyze_fromNumpyArray(data_arrs,lang)
     return similar_traces, similar_tests
 
 

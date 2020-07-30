@@ -5,12 +5,12 @@ from tensorflow.keras.layers import Dense, Input
 from tensorflow.keras.layers import TimeDistributed
 from tensorflow.keras.layers import Bidirectional
 from tensorflow.keras.models import load_model
-
+# from keras.models import load_model
 
 
 def bidirectionalLSTM(dataset, pretrained_weights = None):
     if pretrained_weights:
-        fname = 'models/' + pretrained_weights + ".h5"
+        fname = 'models/' + pretrained_weights
         model = load_model(fname)
         return model
 
@@ -18,14 +18,18 @@ def bidirectionalLSTM(dataset, pretrained_weights = None):
     n_block = dataset.shape[2]
 
     in_tensor = tf.keras.layers.Input((n_timesteps,n_block,),name='Input')
-    bidir = tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(20, return_sequences=True))(in_tensor)
-    out = tf.keras.layers.TimeDistributed(tf.keras.layers.Dense(3, activation='softmax'))(bidir)
+    bidir = tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(20))(in_tensor)
+    out = tf.keras.layers.Dense(3, activation='softmax')(bidir)
 
     model = tf.keras.models.Model( in_tensor,  out)
 
     model.compile(optimizer = tf.keras.optimizers.Adam(lr = 1e-4), loss = 'categorical_crossentropy', metrics = ['accuracy'])
 
-    print(model.summary())
+    if pretrained_weights is not None:
+        fname = 'models/' + pretrained_weights
+        self.load(fname)
+
+    # print(model.summary())
     return model
 
 
@@ -38,10 +42,10 @@ class BidirectionalLSTM(Model):
 
         self.input = Input((n_timesteps,),name='Input')
         bidir = Bidirectional(LSTM(20, return_sequences=True))(self.input)
-        out = TimeDistributed(Dense(3, activation='softmax'))(bidir)
+        out = Dense(3, activation='softmax')(bidir)
 
-        super().__init__(inputs = self.input, outputs = out) #RFIRE
+        super().__init__(inputs = self.input, outputs = out)
 
         print(self.summary())
 
-        self.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy']) #RFIRE
+        self.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
