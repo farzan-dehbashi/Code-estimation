@@ -23,7 +23,7 @@ import networks
 
 label_size = 3
 
-train = False
+train = True
 
 og_path = "power_cunsumption/2k_per_second_"
 
@@ -93,7 +93,7 @@ if __name__ == "__main__":
 
         X, y, val_X, val_y, test_X, test_y = balanceDataset(masterDataset, masterLabels)
         dataset = X
-    elif 'load_all' in sys.argv:
+    elif 'load_dataset' in sys.argv:
         time = '20200729-233039'
         X = np.load('datasets/'+ time +'_X.npy' )
         y = np.load('datasets/'+ time +'_y.npy' )
@@ -102,10 +102,6 @@ if __name__ == "__main__":
         test_X = np.load('datasets/'+ time +'_test_X.npy' )
         test_y = np.load('datasets/'+ time +'_test_y.npy' )
     else:
-
-
-        # maybe hardcode paths in here for numpy and scipy
-
         paths = []
         for i, lang in enumerate(sys.argv[1:]):
             print(">>> GETTING ", lang)
