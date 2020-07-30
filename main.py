@@ -167,6 +167,7 @@ if __name__ == "__main__":
     preds = mod.predict(test_X)
 
     # flat_preds = np.argmax(preds, axis=1)
+    flat_preds = preds
     print(flat_preds)
     flat_test_y = np.argmax(test_y, axis=1)
     print(flat_test_y)
