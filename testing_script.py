@@ -13,6 +13,7 @@ import random
 from random import sample
 from scipy import optimize
 import math
+import sys
 
 class runScipy(object):
     def __init__(self):
@@ -181,6 +182,7 @@ class runPython(object):
             i(arr)
         print("python")
 
+
     def createArray(self,h,w):
         arr = []
         for h_count in range(h):
@@ -262,7 +264,7 @@ modes = [runNumpy(), runScipy(), runPython()]
 
 start = time.time()
 
-length = str(sys.argv[-1])
+length = int(sys.argv[-1])
 max_dim = 100
 
 # loop for "length" seconds
