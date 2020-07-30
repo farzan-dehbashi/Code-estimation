@@ -21,7 +21,7 @@ import time
 import parse_output_file
 import networks
 
-label_size = 3
+label_size = 2
 
 train = True
 
@@ -86,8 +86,8 @@ if __name__ == "__main__":
     masterLabels = []
     if "load" in sys.argv:
         for i, lang in enumerate(sys.argv[1:-1]):
-            dataset = np.load(og_path+lang+'/X_'+lang+'_all_200.npy')
-            dataset_y = np.load(og_path+lang+'/y_'+lang+'_all_200.npy')
+            dataset = np.load(og_path+lang+'/X_'+lang+'_all_200_2classes.npy')
+            dataset_y = np.load(og_path+lang+'/y_'+lang+'_all_200_2classes.npy')
             masterDataset.append(dataset)
             masterLabels.append(dataset_y)
 
@@ -112,13 +112,13 @@ if __name__ == "__main__":
             dataset_y = np.zeros((dataset.shape[0], label_size))
             dataset_y[:,langs[lang]] = dataset_y[:,langs[lang]] + 1
 
-            np.save(og_path+lang+'/X_'+lang+'_all_200.npy', dataset)
-            np.save(og_path+lang+'/y_'+lang+'_all_200.npy', dataset_y)
+            np.save(og_path+lang+'/X_'+lang+'_all_200_2classes.npy', dataset)
+            np.save(og_path+lang+'/y_'+lang+'_all_200_2classes.npy', dataset_y)
             print(lang, " X: ", dataset.shape, " y: ", dataset_y.shape)
 
             masterDataset.append(dataset)
             masterLabels.append(dataset_y)
-
+        exit()
         X, y, val_X, val_y, test_X, test_y = balanceDataset(masterDataset, masterLabels)
 
     # masterDataset = np.concatenate((masterDataset))
@@ -161,12 +161,12 @@ if __name__ == "__main__":
     print(flat_preds)
     flat_test_y = np.argmax(test_y, axis=1)
     print(flat_test_y)
-    print(np.count_nonzero(flat_preds == 0))
-    print(np.count_nonzero(flat_preds == 1))
-    print(np.count_nonzero(flat_preds == 2))
-    print(np.count_nonzero(flat_test_y == 0))
-    print(np.count_nonzero(flat_test_y == 1))
-    print(np.count_nonzero(flat_test_y == 2))
+    print("pred = 0: ", np.count_nonzero(flat_preds == 0))
+    print("pred = 1: ", np.count_nonzero(flat_preds == 1))
+    # print(np.count_nonzero(flat_preds == 2))
+    print("ground = 0: ", np.count_nonzero(flat_test_y == 0))
+    print("ground = 0: ", np.count_nonzero(flat_test_y == 1))
+    # print(np.count_nonzero(flat_test_y == 2))
     diff = flat_test_y - flat_preds
     correct = np.count_nonzero(diff == 0)
     incorrect = np.count_nonzero(diff)
