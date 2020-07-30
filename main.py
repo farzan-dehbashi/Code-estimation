@@ -144,12 +144,17 @@ if __name__ == "__main__":
 
     if train:
         time_string = time.strftime("%Y%m%d-%H%M%S")
-        bidir_mod = networks.bidirectionalLSTM(X)
+        # mod = networks.bidirectionalLSTM(X)
+        mod = networks.CNN_mod(X)
 
         # es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=20)
         epochs = 10
-        bidir_mod.fit(X,y, batch_size=32, epochs=epochs,verbose=1, validation_data=(val_X, val_y)) #, callbacks=[es]
-        bidir_mod.save('models/'+str(time_string)+'_epochs'+ str(epochs) +'.h5')
+        # mod.fit(X,y, batch_size=32, epochs=epochs,verbose=1, validation_data=(val_X, val_y)) #, callbacks=[es]
+        # mod.save('models/'+str(time_string)+'_epochs'+ str(epochs) +'.h5')
+
+        mod.fit(X,y, batch_size=32, epochs=epochs,verbose=1, validation_data=(val_X, val_y))
+        mod.save('models/CNN'+str(time_string)+'.h5')
+
         np.save('datasets/'+time_string+'_X.npy', X)
         np.save('datasets/'+time_string+'_y.npy', y)
         np.save('datasets/'+time_string+'_val_X.npy', val_X)
@@ -158,8 +163,8 @@ if __name__ == "__main__":
         np.save('datasets/'+time_string+'_test_y.npy', test_y)
     else:
         mod = '20200729-233039.h5'
-        bidir_mod = networks.bidirectionalLSTM(X, mod)
-    preds = bidir_mod.predict(test_X)
+        mod = networks.bidirectionalLSTM(X, mod)
+    preds = mod.predict(test_X)
 
     # flat_preds = np.argmax(preds, axis=1)
     print(flat_preds)

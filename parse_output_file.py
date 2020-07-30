@@ -253,6 +253,9 @@ def analyze_fromNumpyArray(data_arrs,lang):
         if val[0].shape[0] < min_length_power:
             min_length_power = val[0].shape[0]
 
+        # plt.plot(np.arange(val[0].shape[0]), val[0])
+        # plt.show()
+
     # ----- all are about the same length, so compare all of them together
     if compare_same_length:
         data, all_power_times = [], []

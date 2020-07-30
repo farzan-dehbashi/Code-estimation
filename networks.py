@@ -58,25 +58,48 @@ def bidirectionalLSTM(dataset, pretrained_weights = None):
     dropout = tf.keras.layers.Dropout(0.05)(dense1)
     out = tf.keras.layers.Dense(1, activation="sigmoid")(dropout)
 
+    # out = tf.keras.layers.Dense(2, activation='softmax')(bidir) #was 3
+
+    model = tf.keras.models.Model( in_tensor,  out)
+
+
+    model.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = metrics = ['accuracy'])
+    # model.compile(optimizer = tf.keras.optimizers.Adam(lr = 1e-4), loss = 'categorical_crossentropy', metrics = ['accuracy'])
+
+    if pretrained_weights is not None:
+        fname = 'models/' + pretrained_weights
+        self.load(fname)
+
+    # print(model.summary())
+    return model
+
+
+def CNN_mod(dataset, pretrained_weights = None):
+    if pretrained_weights:
+        fname = 'models/' + pretrained_weights
+        model = load_model(fname)
+        return model
+
+    n_timesteps = dataset.shape[1]
+    n_block = dataset.shape[2]
+
+    # in_tensor = tf.keras.layers.Input((n_timesteps,n_block,),name='Input')
+    # bidir = tf.keras.layers.Bidirectional(tf.keras.layers.LSTM(20))(in_tensor)
+    # out = tf.keras.layers.Dense(2, activation='softmax')(bidir) #was 3
+
+    in_tensor = tf.keras.layers.Input((n_timesteps,n_block,),name='Input')
+    cnn = tf.keras.layers.Conv1D(filters=64, kernel_size=10, activation='relu')(in_tensor)
+    cnn = tf.keras.layers.Conv1D(filters=128, kernel_size=10, activation='relu')(cnn)
+    drop = tf.keras.layer.Dropout(0.5)(cnn)
+    out = tf.keras.layers.Dense(1, activation="sigmoid")(drop)
 
 
     # out = tf.keras.layers.Dense(2, activation='softmax')(bidir) #was 3
 
-
     model = tf.keras.models.Model( in_tensor,  out)
 
-    METRICS = [
-    tf.keras.metrics.TruePositives(name='tp'),
-    tf.keras.metrics.FalsePositives(name='fp'),
-    tf.keras.metrics.TrueNegatives(name='tn'),
-    tf.keras.metrics.FalseNegatives(name='fn'),
-    tf.keras.metrics.BinaryAccuracy(name='accuracy'),
-    tf.keras.metrics.Precision(name='precision'),
-    tf.keras.metrics.Recall(name='recall'),
-    tf.keras.metrics.AUC(name='auc'),
-    ]
 
-    model.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = METRICS)
+    model.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = metrics = ['accuracy'])
     # model.compile(optimizer = tf.keras.optimizers.Adam(lr = 1e-4), loss = 'categorical_crossentropy', metrics = ['accuracy'])
 
     if pretrained_weights is not None:
