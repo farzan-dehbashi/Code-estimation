@@ -9,10 +9,15 @@ scipy -> python3 single_test.py scipy
 import numpy as np
 import scipy
 import sys
+import time
 
 if sys.argv[-1] == 'numpy':
     print(np.fft.test(verbose=3))
-    # print(np.lib.test(verbose=3))
+    time.sleep(30)
+    print(np.lib.test(verbose=3))
 else:
     import scipy.stats
     print(scipy.stats.test(verbose=3))
+    time.sleep(30)
+    import scipy.cluster
+    print(scipy.cluster.test(verbose=3))
