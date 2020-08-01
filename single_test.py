@@ -12,6 +12,7 @@ import sys
 
 if sys.argv[-1] == 'numpy':
     print(np.fft.test(verbose=3))
+    # print(np.lib.test(verbose=3))
 else:
     import scipy.stats
     print(scipy.stats.test(verbose=3))
