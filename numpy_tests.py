@@ -10,20 +10,19 @@ print("base_function")
 a = np.mean(arr)
 
 time.sleep(1)
-print("base_function")
 a = np.mean(arr)
+
 time.sleep(1)
-print("base_function")
 a = np.median(arr)
+
 time.sleep(1)
-print("base_function")
 a = np.amax(arr)
+
 time.sleep(1)
-print("base_function")
 a = np.amin(arr)
+
 time.sleep(1)
-print("base_function")
 a = arr.reshape(((arr.shape[0]*arr.shape[1]*arr.shape[2]),))
+
 time.sleep(1)
-print("base_function")
 a = arr.flatten()
