@@ -1,5 +1,6 @@
 import numpy as np
 import time
+np.random.seed(0)
 
 print("making_array")
 arr = np.random.rand(1000,100,100)
@@ -8,6 +9,9 @@ time.sleep(1)
 
 print("base_function")
 a = np.mean(arr)
+
+
+# -------
 
 time.sleep(1)
 a = np.mean(arr)
