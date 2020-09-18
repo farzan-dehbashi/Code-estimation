@@ -1,4 +1,5 @@
 import numpy as np
+import scipy
 import time
 import random
 from random import sample
@@ -14,7 +15,7 @@ class runNumpy(object):
         self.arr = arr
 
         # set functions here
-        self.funcs = [self.np_mean,self.np_median,self.np_max,self.np_min,self.np_reshape,self.np_flat]
+        self.funcs = [self.np_mean,self.np_median,self.np_max,self.np_min,self.np_flat,self.np_fft, self.sci_fft] #,self.np_reshape
 
     def callSoft(self):
         funcs_to_run = sample(self.funcs,len(self.funcs))
@@ -50,14 +51,23 @@ class runNumpy(object):
         print("flatten")
         a = self.arr.flatten()
 
+    def np_fft(self):
+        print("numpy_fft")
+        a = np.fft.fft(self.arr)
+
+    def sci_fft(self):
+        print("scipy_fft")
+        a = scipy.fft.fft(self.arr)
+
 
 print("making_array")
-arr = np.random.rand(1000,100,100)
+arr = np.random.rand(65536,)   #np.random.rand(1000,100,100)
 
 time.sleep(1)
 
-print("base_function_np_mean")
-a = np.mean(arr)
+print("base_function_np_fft")
+# a = np.mean(arr)
+a = np.fft.fft(arr)
 
 # ------- testing
 
