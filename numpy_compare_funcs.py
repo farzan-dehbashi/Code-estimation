@@ -9,8 +9,8 @@ arr = np.random.rand(1000,100,100)
 
 time.sleep(1)
 
-a = self.arr.flatten()
+a = arr.flatten()
 
 time.sleep(1)
 
-a = self.arr.reshape(((self.arr.shape[0]*self.arr.shape[1]*self.arr.shape[2]),))
+a = arr.reshape(((self.arr.shape[0]*self.arr.shape[1]*self.arr.shape[2]),))
