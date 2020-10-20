@@ -4,9 +4,20 @@ import time
 import random
 from random import sample
 import sys
-np.random.seed(0)
+# np.random.seed(0)
+
+# do this for all the different functions
+# change size for np.mean as one experiment
+# other experiments are all on fixed size
 
 
+# look for popular application that uses np.mean on github
+
+# exps:
+# np.mean vs np.mean from another run
+# one with a lot of functions without sleepers
+# one with different sizes of inputs
+# one with np.fft.fft and scipy.fft.fft
 
 class runNumpy(object):
     def __init__(self, arr):
