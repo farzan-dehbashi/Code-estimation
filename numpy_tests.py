@@ -1,6 +1,7 @@
 import numpy as np
 import time
-np.random.seed(0)
+# np.random.seed(0)
+
 
 print("making_array")
 arr = np.random.rand(1000,100,100)
