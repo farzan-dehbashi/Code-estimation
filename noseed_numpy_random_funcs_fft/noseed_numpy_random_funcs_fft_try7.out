@@ -1,10 +1,6 @@
-15:55:34 making_array
-15:55:34 base_function_np_fft
-15:55:34 looping
-15:55:34 max
-15:55:34 scipy_fft
-15:55:34 median
-15:55:34 numpy_fft
-15:55:34 min
-15:55:34 flatten
-15:55:34 mean
+10:40:12 making_array
+10:40:12 base_function_mean
+10:40:12 looping
+10:40:12 mean
+10:40:12 flatten
+10:40:12 numpy_fft
