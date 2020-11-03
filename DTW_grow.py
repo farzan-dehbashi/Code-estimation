@@ -120,7 +120,7 @@ mode = sys.argv[-1].split("/")[-1]
 # ************************************************* GROW BELOW *************************************************
 
 # ../../../../../Desktop/Multimeter_SHARE/numpy_grow_mean.csv
-if mode == "numpy_grow_mean.csv":
+if mode == "numpy_random_funcs_nosleep_mean_SUBSET_long_try":
     grow_file = "traces/numpy_grow_mean.csv"
     trace_check_str = "mean"
     grow_nums = {0: [12687, 12705],
@@ -132,21 +132,8 @@ if mode == "numpy_grow_mean.csv":
             6: [55035, 55326],
             7: [67412, 67787]}
 
-# ../../../../../Desktop/Multimeter_SHARE/numpy_grow_fft.csv
-if mode == "numpy_grow_fft.csv":
-    grow_file = "traces/numpy_grow_fft.csv"
-    trace_check_str = "numpy_fft"
-    grow_nums = {0: [5663, 5854],
-                1: [9296, 9713],
-                2: [13195, 14100],
-                3: [17656, 19541],
-                4: [23254, 27453],
-                5: [31455, 40120],
-                6: [44756, 63714],
-                7: [69583, 113425]}
-
 # ../../../../../Desktop/Multimeter_SHARE/numpy_grow_median.csv
-if mode == "numpy_grow_median.csv":
+if mode == "numpy_random_funcs_nosleep_median_SUBSET_long_try":
     grow_file = "traces/numpy_grow_median.csv"
     trace_check_str = "median"
     grow_nums = {0: [6389, 6452],
@@ -158,8 +145,23 @@ if mode == "numpy_grow_median.csv":
                 6: [47421, 50738],
                 7: [60989, 64901]}
 
+# ../../../../../Desktop/Multimeter_SHARE/numpy_grow_fft.csv
+if mode == "numpy_random_funcs_nosleep_fft_SUBSET_try":
+    grow_file = "traces/numpy_grow_fft.csv"
+    trace_check_str = "numpy_fft"
+    grow_nums = {0: [5663, 5854],
+                1: [9296, 9713],
+                2: [13195, 14100],
+                3: [17656, 19541],
+                4: [23254, 27453],
+                5: [31455, 40120],
+                6: [44756, 63714],
+                7: [69583, 113425]}
+
+
+
 # ../../../../../Desktop/Multimeter_SHARE/numpy_grow_max.csv
-if mode == "numpy_grow_max.csv":
+if mode == "numpy_random_funcs_nosleep_max_SUBSET_long_try":
     grow_file = "traces/numpy_grow_max.csv"
     trace_check_str = "max"
     grow_nums = {0: [6561, 6571],
