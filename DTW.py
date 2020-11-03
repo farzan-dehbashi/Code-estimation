@@ -151,6 +151,7 @@ mode = sys.argv[-1].split("/")[-1]
 # ******************************************************************************************************************************************************
 if mode == "numpy_random_funcs_nosleep_mean_SUBSET_try":
     trace_check_str = "mean"
+    func_name = "Mean"
     nums = {0: [4385, 4391],
             1: [5061, 5067],
             2: [4528, 4534],
@@ -164,6 +165,7 @@ if mode == "numpy_random_funcs_nosleep_mean_SUBSET_try":
 
 if mode == "numpy_random_funcs_nosleep_fft_SUBSET_try":
     trace_check_str = "numpy_fft"
+    func_name = "FFT"
     nums = {0: [4489, 6351],
             1: [4535, 6397],
             2: [4549, 6476],
@@ -177,6 +179,7 @@ if mode == "numpy_random_funcs_nosleep_fft_SUBSET_try":
 
 if mode == "numpy_random_funcs_nosleep_mean_SUBSET_long_try":
     trace_check_str = "mean"
+    func_name = "Mean"
     nums = {0: [7890, 8006],
             1: [7531, 7650],
             2: [7177, 7294],
@@ -190,6 +193,7 @@ if mode == "numpy_random_funcs_nosleep_mean_SUBSET_long_try":
 
 if mode == "numpy_random_funcs_nosleep_max_SUBSET_long_try":
     trace_check_str = "max"
+    func_name = "Amax"
     nums = {0: [6495, 6720],
             1: [6781, 7009],
             2: [7384, 7616],
@@ -203,6 +207,7 @@ if mode == "numpy_random_funcs_nosleep_max_SUBSET_long_try":
 
 if mode == "numpy_random_funcs_nosleep_median_SUBSET_long_try":
     trace_check_str = "median"
+    func_name = "Median"
     nums = {0: [6754, 8018],
             1: [7422, 8691],
             2: [7529, 8798],
@@ -229,6 +234,7 @@ if mode == "numpy_random_funcs_nosleep_median_SUBSET_long_try":
 
 if mode == "noseed_numpy_tests_mean_sleep":
     trace_check_str = "mean"
+    func_name = "Mean"
     nums = {0: [6612, 6729],
             1: [6668, 6785],
             2: [6653, 6772],
@@ -242,6 +248,7 @@ if mode == "noseed_numpy_tests_mean_sleep":
 
 if mode == "noseed_numpy_tests_median_sleep":
     trace_check_str = "median"
+    func_name = "Median"
     nums = {0: [7071, 8991],
             1: [6889, 8300],
             2: [7029, 8915],
@@ -255,6 +262,7 @@ if mode == "noseed_numpy_tests_median_sleep":
 
 if mode == "noseed_numpy_tests_max_sleep":
     trace_check_str = "max"
+    func_name = "Amax"
     nums = {0: [6604, 6836],
             1: [6777, 7009],
             2: [6903, 7142],
@@ -272,6 +280,7 @@ if mode == "noseed_numpy_tests_max_sleep":
 # ==========================================================================================================================
 if mode == "noseed_numpy_random_funcs_mean_try":
     trace_check_str = "mean"
+    func_name = "Mean"
     nums = {0: [8067, 8183],
             1: [7471, 7587],
             2: [7146, 7262],
@@ -285,6 +294,7 @@ if mode == "noseed_numpy_random_funcs_mean_try":
 
 if mode == "noseed_numpy_random_funcs_median_try":
     trace_check_str = "median"
+    func_name = "Median"
     nums = {0: [8876, 10809],
             1: [8223, 10100],
             2: [7500, 9288],
@@ -298,6 +308,7 @@ if mode == "noseed_numpy_random_funcs_median_try":
 
 if mode == "noseed_numpy_random_funcs_fft_try":
     trace_check_str = "numpy_fft"
+    func_name = "FFT"
     nums = {0: [4692, 6610],
             1: [4245, 6098],
             2: [5062, 6912],
@@ -311,6 +322,7 @@ if mode == "noseed_numpy_random_funcs_fft_try":
 
 if mode == "noseed_numpy_random_funcs_max_try":
     trace_check_str = "max"
+    func_name = "Amax"
     nums = {0: [7158, 7388],
             1: [7550, 7783],
             2: [6959, 7189],
@@ -545,7 +557,7 @@ legend_elements = [Line2D([0], [0], marker='o', color='w', label='Present',marke
                    Line2D([0], [0], marker='o', color='w', label='Omitted', markerfacecolor='r', markersize=9)]
 
 plt.legend(handles=legend_elements,framealpha=1, fontsize=18,loc='center right')
-plt.title("Numpy Function: Amax", fontsize=25)
+plt.title("Numpy Function: "+func_name, fontsize=25)
 plt.xlabel("d Value", fontsize=25)
 plt.xticks(fontsize=20)
 # plt.yticks([-0.05,0.05],["Classified", "Actual"],fontsize=25)
