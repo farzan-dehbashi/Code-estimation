@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 from matplotlib.patches import Patch
 
+
 from sklearn.linear_model import LogisticRegression
 logisticRegr = LogisticRegression()
 
@@ -114,12 +115,6 @@ def calculateD(start, end, target, printer=False, power_data=None):
     target_fft = np.absolute(np.fft.fft(target)[1:((end-start)//2)])
 
     window_fft_diff = np.absolute(np.fft.ifft(target_fft/window_fft))
-    window_fft_diff = 2.0/window_fft.shape[0] * np.absolute(window_fft_diff[:window_fft.shape[0]//2])
-
-    # if printer:
-    #     plt.plot(np.arange(window_fft_diff.shape[0]), window_fft_diff)
-    #     plt.show()
-    #     exit()
 
 
     # difference of medians
@@ -149,7 +144,7 @@ def calculateD(start, end, target, printer=False, power_data=None):
         # plt.plot(np.arange(target.shape[0]), target)
         # plt.show()
         # makePaperFigureFFT(window_fft_diff)
-        # exit()
+
 
     return d
 
@@ -181,6 +176,13 @@ def makePaperFigure(file_data, min_d_idx, target_len, f_start, f_end):
 
     for i in range(power.shape[0]):
         if i%2000 == 0:
+
+    return power
+
+def makePaperFigure(file_data, min_d, target_len):
+    xtick_vals, xtick_labels = [],[]
+    for i in range(file_data[0].shape[0]):
+        if i%200 == 0:
             xtick_vals.append(i)
             xtick_labels.append(round(i/1000,1))
 
@@ -203,6 +205,23 @@ def makePaperFigure(file_data, min_d_idx, target_len, f_start, f_end):
                         Patch(facecolor='red', alpha=0.2,label='Minimum d Value')]
     # #                     Patch(facecolor='blue',label='Large')]
     plt.legend(handles=legend_elements, framealpha=1, fontsize=18, loc='upper right')
+    # plt.axvspan(83, 535, color='orange', alpha=0.2)
+    # plt.axvspan(671, 1070, color='red', alpha=0.2)
+    # plt.axvspan(540, 920, color='blue', alpha=0.2)
+
+    plt.plot(np.arange(file_data[0].shape[0]), file_data[0], c='b')
+    plt.axvline(x=min_d, color='r')
+    plt.title("Code Execution", fontsize=25)
+    plt.ylabel("Watts",fontsize=25)
+    plt.xlabel("Time (s)",fontsize=25)
+    # plt.xticks(xtick_vals, xtick_labels,fontsize=22)
+    plt.yticks(fontsize=22)
+
+    #
+    # legend_elements = [ Patch(facecolor='orange', alpha=0.2,label='Flatten'),
+    #                     Patch(facecolor='red', alpha=0.2,label='Reshape')]
+    # #                     Patch(facecolor='blue',label='Large')]
+    # plt.legend(handles=legend_elements, framealpha=1, fontsize=18, loc='upper right')
     plt.show()
     exit()
 
@@ -218,6 +237,7 @@ def getWidth(window_fft_diff, med_abs_val):
 
 TP, TN, FP, FN = 0,0,0,0
 nums = None
+
 
 
 
@@ -336,16 +356,16 @@ nums = None
 # ========== NO SEED BELOW =================================================================================================
 # ==========================================================================================================================
 # noseed_numpy_random_funcs_mean_try
-# nums = {0: [8067, 8183],
-#         1: [7471, 7587],
-#         2: [7146, 7262],
-#         3: [7033, 7149],
-#         4: [7162, 7278],
-#         5: [7550, 7666],
-#         6: [7871, 7989],
-#         7: [7423, 7538],
-#         8: [7308, 7424],
-#         9: [7125, 7240]} #7715, 7831]}
+nums = {0: [8067, 8183],
+        1: [7471, 7587],
+        2: [7146, 7262],
+        3: [7033, 7149],
+        4: [7162, 7278],
+        5: [7550, 7666],
+        6: [7871, 7989],
+        7: [7423, 7538],
+        8: [7308, 7424],
+        9: [7125, 7240]} #7715, 7831]}
 
 # noseed_numpy_random_funcs_median_try
 # nums = {0: [8876, 10809],
@@ -372,20 +392,20 @@ nums = None
 #         9: [4600, 6453]}
 
 # noseed_numpy_random_funcs_max_try
-nums = {0: [7158, 7388],
-        1: [7550, 7783],
-        2: [6959, 7189],
-        3: [6948, 7179],
-        4: [7602, 7833],
-        5: [6984, 7211],
-        6: [7713, 7941],
-        7: [6773, 7007],
-        8: [6997, 7232],
-        9: [7464, 7694]}
+# nums = {0: [7158, 7388],
+#         1: [7550, 7783],
+#         2: [6959, 7189],
+#         3: [6948, 7179],
+#         4: [7602, 7833],
+#         5: [6984, 7211],
+#         6: [7713, 7941],
+#         7: [6773, 7007],
+#         8: [6997, 7232],
+#         9: [7464, 7694]}
 
 
 
-# plt.figure(figsize=(14,2))
+plt.figure(figsize=(14,2))
 training_trials = 3
 min_d_vals, labels = [], []
 all_min_d = []
@@ -395,6 +415,9 @@ for trial in range(0,10):
     fname = sys.argv[1] + str(trial) + ".csv"
     # fname = '../../../../../Desktop/Multimeter_SHARE/numpy_mean_grow.csv'
 
+for trial in range(10):
+    print("Target: ", trial)
+    fname = sys.argv[1] + str(trial) + ".csv"
     fname_arr = fname.split("/")
     data = parseData(fname)
 
@@ -405,6 +428,7 @@ for trial in range(0,10):
     target = data[f_start:f_end]
 
     # returned_d = calculateD(f_start, (f_start+target.shape[0]), target, printer=True, power_data=data)
+
 
     # train logistic regression model
     if trial == training_trials:
@@ -433,9 +457,6 @@ for trial in range(0,10):
         # fname = '../../../../../Desktop/Multimeter_SHARE/numpy_random_funcs_nosleep_median_SUBSET_long/numpy_random_funcs_nosleep_median_SUBSET_long_try'+ str(try_num) + ".csv"
         # fname = '../../../../../Desktop/Multimeter_SHARE/numpy_random_funcs_nosleep_fft_SUBSET_long/numpy_random_funcs_nosleep_fft_SUBSET_long_try'+ str(try_num) + ".csv"
         # fname = '../../../../../Desktop/Multimeter_SHARE/numpy_random_funcs_nosleep_max_SUBSET_long/numpy_random_funcs_nosleep_max_SUBSET_long_try'+ str(try_num) + ".csv"
-
-
-
 
         fname_arr = fname.split("/")
 
@@ -613,8 +634,6 @@ for trial in range(0,10):
         # plt.plot(np.arange(file_data[0].shape[0]), file_data[0])
         # plt.show()
         # exit()
-
-
 
 
 print()
