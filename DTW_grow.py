@@ -1,5 +1,6 @@
 import numpy as np
 import sys
+import json
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
@@ -331,3 +332,15 @@ print()
 print("Precision: ", precision)
 print("Recall: ", recall)
 print("F-Score: ", f1)
+
+result_dict = {"Mode": mode,
+                "TP": TP,
+                "TN": TN,
+                "FP": FP,
+                "FN": FN,
+                "Pecision": precision,
+                "Recall": recall,
+                "F1-Score": f1}
+
+with open("results/"+mode+'.txt', 'w') as file:
+     file.write(json.dumps(exDict))

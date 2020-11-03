@@ -1,5 +1,6 @@
 import numpy as np
 import sys
+import json
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
@@ -516,7 +517,7 @@ for trial in range(0,10):
 
 
 np.save(np.array(present_min_d), "present_min_d-"+mode+".npy")
-np.save(np.array(omitted_min_d), "present_min_d-"+mode+".npy")
+np.save(np.array(omitted_min_d), "omitted_min_d-"+mode+".npy")
 
 print()
 print("********** RESULTS **********")
@@ -530,6 +531,18 @@ f1 = 2 * ((precision * recall) / (precision + recall))
 print("Precision: ", precision)
 print("Recall: ", recall)
 print("F-Score: ", f1)
+
+result_dict = {"Mode": mode,
+                "TP": TP,
+                "TN": TN,
+                "FP": FP,
+                "FN": FN,
+                "Pecision": precision,
+                "Recall": recall,
+                "F1-Score": f1}
+
+with open("results/"+mode+'.txt', 'w') as file:
+     file.write(json.dumps(exDict))
 
 # conf mtx graph
 # legend_elements = [Line2D([0], [0], marker='o', color='w', label='TP',markerfacecolor='b', markersize=9),
