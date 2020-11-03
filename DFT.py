@@ -3,6 +3,7 @@ import sys
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
+from matplotlib.patches import Patch
 
 from sklearn.linear_model import LogisticRegression
 logisticRegr = LogisticRegression()
@@ -17,17 +18,109 @@ from sklearn.pipeline import make_pipeline
 
 
 
-# NEW TODO:
-# can different sizes of inputs be used to detect other sizes?
+def makePaperFigureFFT(window_fft_diff):
+    xtick_vals, xtick_labels = [],[]
+    # for i in range(file_data[0].shape[0]):
+    #     if i%200 == 0:
+    #         xtick_vals.append(i)
+    #         xtick_labels.append(round(i/1000,1))
+
+    plt.figure(figsize=(14,5))
+    # plt.axvspan(83, 535, color='orange', alpha=0.2)
+    # plt.axvspan(671, 1070, color='red', alpha=0.2)
+    # plt.axvspan(540, 920, color='blue', alpha=0.2)
+
+    plt.plot(np.arange(window_fft_diff.shape[0]), window_fft_diff, c='b')
+    plt.title("FFT Difference - Not Lowest Value of d", fontsize=25)
+    plt.ylabel("Value",fontsize=25)
+    plt.xlabel("Frequency",fontsize=25)
+    # plt.xticks(xtick_vals, xtick_labels,fontsize=22)
+    plt.xticks([0],[""])
+    plt.yticks(fontsize=22)
+
+    #
+    # legend_elements = [ Patch(facecolor='orange', alpha=0.2,label='Flatten'),
+    #                     Patch(facecolor='red', alpha=0.2,label='Reshape')]
+    # #                     Patch(facecolor='blue',label='Large')]
+    # plt.legend(handles=legend_elements, framealpha=1, fontsize=18, loc='upper right')
+    plt.show()
+    # exit()
+
+# def calculateD(start, end, target, printer=False):
+#     # if printer:
+#     #     start+=20
+#     #     end+=20
+#     window = file_data[0][start:end]
+#
+#     # if printer:
+#     #     plt.axvspan(start, end, color='orange', alpha=0.2)
+#     #     plt.plot(np.arange(file_data[0].shape[0]), file_data[0])
+#     #     plt.show()
+#
+#
+#
+#     window_fft = np.fft.fft(window)[1:((end-start)//2)]
+#
+#     target_fft = np.fft.fft(target)[1:((end-start)//2)]
+#
+#     window_fft_diff = np.fft.ifft(target_fft/window_fft) #np.fft.ifft(target_fft/window_fft)[1:(window_fft.shape[0]//2)]
+#
+#     window_fft_diff = 2.0/window_fft.shape[0] * np.absolute(window_fft_diff[:window_fft.shape[0]//2])
+#
+#
+#     # difference of medians
+#     # diff_med = np.absolute(np.median(window) - np.median(target))
+#
+#
+#     med_abs_val = np.median(np.absolute(window_fft_diff))
+#     argmax = np.argmax(window_fft_diff)
+#     h_p = np.amax(np.absolute(window_fft_diff))
+#     w_p, left, right = getWidth(window_fft_diff, med_abs_val)
+#     L_n = np.amax(np.absolute(np.concatenate((window_fft_diff[:left],window_fft_diff[right:]), axis=0))).real
+#
+#     # amp = np.absolute(np.median(window) - np.median(target))
+#     amp = np.mean(np.absolute(window-target))
+#     # amp = np.sum(np.absolute(window-target))
+#
+#     # d = (((w_p * (L_n / h_p)).real) * diff_med) * amp
+#     d = ((w_p * (L_n / h_p)).real) * amp
+#
+#     # if printer:
+#     #     # print("W: ", w_p)
+#     #     # print("L: ", L_n)
+#     #     # print("h: ", h_p)
+#     #     # print("amp: ", amp)
+#     #     # print(d)
+#     #     # exit()
+#     #     # a = np.sort(np.absolute(window-target))
+#     #     # print(np.mean(a[-10:]))
+#     #     plt.plot(np.arange(window.shape[0]), window)
+#     #     plt.plot(np.arange(target.shape[0]), target)
+#     #     plt.show()
+#     #     plt.plot(np.arange(window_fft.shape[0]), window_fft)
+#     #     plt.plot(np.arange(target_fft.shape[0]), target_fft)
+#     #     plt.show()
+#     #     # exit()
+#     #     makePaperFigureFFT(window_fft_diff)
+#
+#     return d
 
 
-def calculateD(start, end, target, printer=False):
+def calculateD(start, end, target, printer=False, power_data=None):
+    # window = power_data[start+100:end+100]
     window = file_data[0][start:end]
     window_fft = np.absolute(np.fft.fft(window)[1:((end-start)//2)])
 
     target_fft = np.absolute(np.fft.fft(target)[1:((end-start)//2)])
 
     window_fft_diff = np.absolute(np.fft.ifft(target_fft/window_fft))
+    window_fft_diff = 2.0/window_fft.shape[0] * np.absolute(window_fft_diff[:window_fft.shape[0]//2])
+
+    # if printer:
+    #     plt.plot(np.arange(window_fft_diff.shape[0]), window_fft_diff)
+    #     plt.show()
+    #     exit()
+
 
     # difference of medians
     # diff_med = np.absolute(np.median(window) - np.median(target))
@@ -44,16 +137,18 @@ def calculateD(start, end, target, printer=False):
     # d = (((w_p * (L_n / h_p)).real) * diff_med) * amp
     d = ((w_p * (L_n / h_p)).real) * amp
 
-    if printer:
-        print("W: ", w_p)
-        print("L: ", L_n)
-        print("h: ", h_p)
-        print("amp: ", amp)
-        a = np.sort(np.absolute(window-target))
-        print(np.mean(a[-10:]))
-        plt.plot(np.arange(window.shape[0]), window)
-        plt.plot(np.arange(target.shape[0]), target)
-        plt.show()
+    # if printer:
+        # print("W: ", w_p)
+        # print("L: ", L_n)
+        # print("h: ", h_p)
+        # print("amp: ", amp)
+        # print("d: ", d)
+        # a = np.sort(np.absolute(window-target))
+        # print(np.mean(a[-10:]))
+        # plt.plot(np.arange(window.shape[0]), window)
+        # plt.plot(np.arange(target.shape[0]), target)
+        # plt.show()
+        # makePaperFigureFFT(window_fft_diff)
         # exit()
 
     return d
@@ -71,34 +166,43 @@ def parseData(path):
     power = np.array(data['power'], dtype=np.float32)*5
     power_time = np.array(data['time'], dtype=np.float32)
 
-
+    # power = np.concatenate((power[:7500], power[13500:15000]),axis=0)
     return power
 
-def makePaperFigure(file_data, min_d, target_len):
+def makePaperFigure(file_data, min_d_idx, target_len, f_start, f_end):
     xtick_vals, xtick_labels = [],[]
-    for i in range(file_data[0].shape[0]):
-        if i%200 == 0:
+
+    # power = np.concatenate((file_data[0][f_start-300:f_end+300], file_data[0][min_d_idx-300:min_d_idx+(target_len+300)]), axis=0)
+    # color_start = 900+target_len
+
+    power = file_data[0][f_start-300:-6000]#np.concatenate((file_data[0][f_start-300:f_end+300], file_data[0][min_d_idx-300:min_d_idx+(target_len+300)]), axis=0)
+    color_start = min_d_idx - (f_start-300)
+
+
+    for i in range(power.shape[0]):
+        if i%2000 == 0:
             xtick_vals.append(i)
             xtick_labels.append(round(i/1000,1))
 
     plt.figure(figsize=(14,5))
-    # plt.axvspan(83, 535, color='orange', alpha=0.2)
-    # plt.axvspan(671, 1070, color='red', alpha=0.2)
+    plt.axvspan(300, target_len+300, color='blue', alpha=0.2)
+    plt.axvspan(color_start, color_start+target_len, color='red', alpha=0.2)
     # plt.axvspan(540, 920, color='blue', alpha=0.2)
 
-    plt.plot(np.arange(file_data[0].shape[0]), file_data[0], c='b')
-    plt.axvline(x=min_d, color='r')
-    plt.title("Code Execution", fontsize=25)
+    plt.plot(np.arange(power.shape[0]), power, c='b')
+    # plt.axvline(x=min_d_idx, color='r')
+    plt.title("Minimum d Value: Numpy Amax", fontsize=25)
     plt.ylabel("Watts",fontsize=25)
     plt.xlabel("Time (s)",fontsize=25)
-    # plt.xticks(xtick_vals, xtick_labels,fontsize=22)
+    plt.xticks(xtick_vals, xtick_labels,fontsize=22)
     plt.yticks(fontsize=22)
+    plt.ylim(top=np.amax(power)+0.4)
 
     #
-    # legend_elements = [ Patch(facecolor='orange', alpha=0.2,label='Flatten'),
-    #                     Patch(facecolor='red', alpha=0.2,label='Reshape')]
+    legend_elements = [ Patch(facecolor='blue', alpha=0.2,label='Target'),
+                        Patch(facecolor='red', alpha=0.2,label='Minimum d Value')]
     # #                     Patch(facecolor='blue',label='Large')]
-    # plt.legend(handles=legend_elements, framealpha=1, fontsize=18, loc='upper right')
+    plt.legend(handles=legend_elements, framealpha=1, fontsize=18, loc='upper right')
     plt.show()
     exit()
 
@@ -114,6 +218,10 @@ def getWidth(window_fft_diff, med_abs_val):
 
 TP, TN, FP, FN = 0,0,0,0
 nums = None
+
+
+
+# ******************************************************************************************************************************************************
 # numpy_random_funcs_nosleep_mean_SUBSET_try
 # nums = {0: [4385, 4391],
 #         1: [5061, 5067],
@@ -151,8 +259,8 @@ nums = None
 #         9: [7030, 7147]}
 
 # numpy_random_funcs_nosleep_max_SUBSET_long_try
-# nums = {0: [6798, 7025],
-#         1: [7029, 7259],
+# nums = {0: [6495, 6720],
+#         1: [6781, 7009],
 #         2: [7384, 7616],
 #         3: [7129, 7359],
 #         4: [7572, 7806],
@@ -185,19 +293,43 @@ nums = None
 #         7: [67412, 67787]}
 
 
-# ************************* seed sleepers ************************************************************************
+# ************************* noseed with sleepers ************************************************************************
 
-noseed_numpy_tests_mean_sleep
-nums = {0: [6612, 6729],
-        1: [6668, 6785],
-        2: [6653, 6772],
-        3: [6572, 6688],
-        4: [6868, 6989],
-        5: [6931, 7048],
-        6: [6934, 7054],
-        7: [6887, 7004],
-        8: [6987, 7106],
-        9: [6758, 6875]}
+# noseed_numpy_tests_mean_sleep
+# nums = {0: [6612, 6729],
+#         1: [6668, 6785],
+#         2: [6653, 6772],
+#         3: [6572, 6688],
+#         4: [6868, 6989],
+#         5: [6931, 7048],
+#         6: [6934, 7054],
+#         7: [6887, 7004],
+#         8: [6987, 7106],
+#         9: [6758, 6875]}
+
+# noseed_numpy_tests_median_sleep
+# nums = {0: [7071, 8991],
+#         1: [6889, 8300],
+#         2: [7029, 8915],
+#         3: [6608, 8417],
+#         4: [6930, 8313],
+#         5: [7083, 8912],
+#         6: [6759, 8235],
+#         7: [6810, 8818],
+#         8: [7073, 8760],
+#         9: [7463, 9015]}
+
+# noseed_numpy_tests_max_sleep
+# nums = {0: [6604, 6836],
+#         1: [6777, 7009],
+#         2: [6903, 7142],
+#         3: [6568, 6798],
+#         4: [7271, 7511],
+#         5: [6290, 6522],
+#         6: [7121, 7360],
+#         7: [6686, 6926],
+#         8: [6047, 6276],
+#         9: [6620, 6849]}
 
 
 # ==========================================================================================================================
@@ -213,11 +345,11 @@ nums = {0: [6612, 6729],
 #         6: [7871, 7989],
 #         7: [7423, 7538],
 #         8: [7308, 7424],
-#         9: [7715, 7831]}
+#         9: [7125, 7240]} #7715, 7831]}
 
 # noseed_numpy_random_funcs_median_try
-# nums = {0: [7613, 9355],
-#         1: [7460, 9182],
+# nums = {0: [8876, 10809],
+#         1: [8223, 10100],
 #         2: [7500, 9288],
 #         3: [8110, 9507],
 #         4: [7256, 9021],
@@ -226,18 +358,6 @@ nums = {0: [6612, 6729],
 #         7: [7183, 8871],
 #         8: [7077, 8475],
 #         9: [7179, 8872]}
-
-# noseed_numpy_random_funcs_max_try
-# nums = {0: [7158, 7388],
-#         1: [7550, 7783],
-#         2: [6959, 7189],
-#         3: [6948, 7179],
-#         4: [7602, 7833],
-#         5: [6984, 7211],
-#         6: [7713, 7941],
-#         7: [6982, 7212],
-#         8: [7397, 7630],
-#         9: [7464, 7694]}
 
 # noseed_numpy_random_funcs_fft_try
 # nums = {0: [4692, 6610],
@@ -248,24 +368,43 @@ nums = {0: [6612, 6729],
 #         5: [4580, 6420],
 #         6: [4387, 6230],
 #         7: [4489, 6365],
-#         8: [4792, 6638],
-#         9: [4400, 6230]}
+#         8: [4977, 6894],
+#         9: [4600, 6453]}
+
+# noseed_numpy_random_funcs_max_try
+nums = {0: [7158, 7388],
+        1: [7550, 7783],
+        2: [6959, 7189],
+        3: [6948, 7179],
+        4: [7602, 7833],
+        5: [6984, 7211],
+        6: [7713, 7941],
+        7: [6773, 7007],
+        8: [6997, 7232],
+        9: [7464, 7694]}
 
 
-plt.figure(figsize=(14,2))
+
+# plt.figure(figsize=(14,2))
 training_trials = 3
 min_d_vals, labels = [], []
 all_min_d = []
 # Grab the function from a trial
-for trial in range(10):
+for trial in range(0,10):
     print("Target: ", trial)
     fname = sys.argv[1] + str(trial) + ".csv"
+    # fname = '../../../../../Desktop/Multimeter_SHARE/numpy_mean_grow.csv'
+
     fname_arr = fname.split("/")
     data = parseData(fname)
 
     f_start = nums[trial][0]
     f_end = nums[trial][1]
+    # f_start = grow_nums[trial][0]
+    # f_end = grow_nums[trial][1]
     target = data[f_start:f_end]
+
+    # returned_d = calculateD(f_start, (f_start+target.shape[0]), target, printer=True, power_data=data)
 
     # train logistic regression model
     if trial == training_trials:
@@ -285,9 +424,19 @@ for trial in range(10):
         clf.fit(min_d_vals, labels)
 
     # loop through other traces and compare function to those others
-    for try_num in range(10):
+    for try_num in range(0,10):
         # try_num = 9
-        fname = sys.argv[1] + str(try_num) + ".csv"
+        fname = sys.argv[1] + str(try_num) + ".csv" #compares to same file
+
+        # ----- These are used with "noseed" to compare to the original experiments
+        # fname = '../../../../../Desktop/Multimeter_SHARE/numpy_random_funcs_nosleep_mean_SUBSET_long/numpy_random_funcs_nosleep_mean_SUBSET_long_try'+ str(try_num) + ".csv"
+        # fname = '../../../../../Desktop/Multimeter_SHARE/numpy_random_funcs_nosleep_median_SUBSET_long/numpy_random_funcs_nosleep_median_SUBSET_long_try'+ str(try_num) + ".csv"
+        # fname = '../../../../../Desktop/Multimeter_SHARE/numpy_random_funcs_nosleep_fft_SUBSET_long/numpy_random_funcs_nosleep_fft_SUBSET_long_try'+ str(try_num) + ".csv"
+        # fname = '../../../../../Desktop/Multimeter_SHARE/numpy_random_funcs_nosleep_max_SUBSET_long/numpy_random_funcs_nosleep_max_SUBSET_long_try'+ str(try_num) + ".csv"
+
+
+
+
         fname_arr = fname.split("/")
 
 
@@ -335,7 +484,7 @@ for trial in range(10):
 
         # target = file_data[0][f_start:f_end] #uncomment for each individual trial matching to itself
 
-        start = f_end+1000
+        start = f_end+2500
         end = start + target.shape[0]
         step = 1
         min_d = 10
@@ -344,7 +493,9 @@ for trial in range(10):
         min_med = 1000
         min_med_idx = 0
 
-
+        # plt.plot(np.arange(file_data[0][start:].shape[0]), file_data[0][start:])
+        # plt.show()
+        # exit()
 
 
         min_n = []
@@ -379,7 +530,7 @@ for trial in range(10):
         s_min_n_idx = min_n_idx[a]
         # s_min_n_amp = min_n_amp[a]
 
-        makePaperFigure(file_data, min_d, (end-start))
+        # makePaperFigure(file_data, min_d_idx, (end-start), f_start, f_end)
 
         # print("Min d: ", min_d, " IDX: ", min_d_idx)
 
@@ -407,10 +558,9 @@ for trial in range(10):
         #     alg_detection = False
 
         func_df = pd.read_csv(fname_arr[-1][:-9] + "/" + fname_arr[-1][:-4] + '.out', names=['functions'])
-
         func_arr = [func_str.split(" ")[-1] for func_str in func_df["functions"].values]
 
-        if "numpy_fft" in func_arr: #func_df["functions"].values.split(" ")[-1]: #numpy_fft, median, mean
+        if "max" in func_arr: #func_df["functions"].values.split(" ")[-1]: #numpy_fft, median, mean
             ACTUAL = True
             dot_color_ground = 'b'
             label = 1
@@ -454,7 +604,8 @@ for trial in range(10):
         if trial >= training_trials:
             # plt.scatter(min_d, 0.05, marker='o',s=90, color=dot_color_ground)
             # plt.scatter(min_d, -0.05, marker='o',s=90, color=dot_color_classify)
-            plt.scatter(min_d, 0, marker='o',s=60, color=dot_color_result)
+            plt.scatter(min_d, 0, marker='o',s=60, color=dot_color_ground)
+            # plt.scatter(min_d, 0, marker='o',s=60, color=dot_color_result)
 
         # for i, val in enumerate(s_min_n_idx[:10]):
         #     plt.axvline(x=val, color='g')
@@ -464,9 +615,7 @@ for trial in range(10):
         # exit()
 
 
-precision = TP / (TP+FP)
-recall = TP / (TP + FN)
-f1 = 2 * ((precision * recall) / (precision + recall))
+
 
 print()
 print("********** RESULTS **********")
@@ -474,22 +623,47 @@ print("Experiment: ", fname_arr[-1][:-9])
 print()
 print("TP: ", TP, " TN: ", TN, " FP: ", FP, " FN: ", FN)
 print()
+precision = TP / (TP+FP)
+recall = TP / (TP + FN)
+f1 = 2 * ((precision * recall) / (precision + recall))
 print("Precision: ", precision)
 print("Recall: ", recall)
 print("F-Score: ", f1)
 
 # conf mtx graph
-legend_elements = [Line2D([0], [0], marker='o', color='w', label='TP',markerfacecolor='b', markersize=9),
-                   Line2D([0], [0], marker='o', color='w', label='TN', markerfacecolor='r', markersize=9),
-                   Line2D([0], [0], marker='o', color='w', label='FP', markerfacecolor='g', markersize=9),
-                   Line2D([0], [0], marker='o', color='w', label='FN', markerfacecolor='c', markersize=9)]
+# legend_elements = [Line2D([0], [0], marker='o', color='w', label='TP',markerfacecolor='b', markersize=9),
+#                    Line2D([0], [0], marker='o', color='w', label='TN', markerfacecolor='r', markersize=9),
+#                    Line2D([0], [0], marker='o', color='w', label='FP', markerfacecolor='g', markersize=9),
+#                    Line2D([0], [0], marker='o', color='w', label='FN', markerfacecolor='c', markersize=9)]
+#
+#
+# plt.legend(handles=legend_elements,framealpha=1,ncol=2, fontsize=16,loc='center right')
+# plt.title("Numpy Median Detection - Same Array", fontsize=25)
+# plt.xlabel("d Value", fontsize=25)
+# plt.xticks(fontsize=20)
+# plt.yticks([0],[""],fontsize=25)
+# plt.ylim(bottom=-0.05, top=0.05)
+#
+# last = np.sort(np.array(all_min_d))[-1]
+# first = np.sort(np.array(all_min_d))[0]
+# middle = (last - first) / 2
+#
+# plt.xlim(left=first*0.9, right= last*1.3)
+#
+# # plt.axhline(linewidth=2,color='k')
+# plt.show()
 
 
-plt.legend(handles=legend_elements,framealpha=1,ncol=2, fontsize=16,loc='center right')
-plt.title("Numpy Function: FFT", fontsize=25)
+# ----- graph with "actual" and "classified"
+legend_elements = [Line2D([0], [0], marker='o', color='w', label='Present',markerfacecolor='b', markersize=9),
+                   Line2D([0], [0], marker='o', color='w', label='Omitted', markerfacecolor='r', markersize=9)]
+
+plt.legend(handles=legend_elements,framealpha=1, fontsize=18,loc='center right')
+plt.title("Numpy Function: Amax", fontsize=25)
 plt.xlabel("d Value", fontsize=25)
 plt.xticks(fontsize=20)
-plt.yticks([0],[""],fontsize=25)
+# plt.yticks([-0.05,0.05],["Classified", "Actual"],fontsize=25)
+plt.yticks([0],[""])
 plt.ylim(bottom=-0.05, top=0.05)
 
 last = np.sort(np.array(all_min_d))[-1]
@@ -500,25 +674,4 @@ plt.xlim(left=first*0.9, right= last*1.3)
 
 # plt.axhline(linewidth=2,color='k')
 plt.show()
-
-
-# ----- graph with "actual" and "classified"
-# legend_elements = [Line2D([0], [0], marker='o', color='w', label='Present',markerfacecolor='b', markersize=12),
-#                    Line2D([0], [0], marker='o', color='w', label='Omitted', markerfacecolor='r', markersize=12)]
-#
-# plt.legend(handles=legend_elements,framealpha=1, fontsize=18,loc='center right')
-# plt.title("Numpy Function: Mean", fontsize=25)
-# plt.xlabel("d Value", fontsize=25)
-# plt.xticks(fontsize=20)
-# plt.yticks([-0.05,0.05],["Classified", "Actual"],fontsize=25)
-# plt.ylim(bottom=-0.1, top=0.1)
-#
-# last = np.sort(np.array(all_min_d))[-1]
-# first = np.sort(np.array(all_min_d))[0]
-# middle = (last - first) / 2
-#
-# plt.xlim(left=first*0.9, right= last*1.3)
-#
-# plt.axhline(linewidth=2,color='k')
-# plt.show()
 exit()

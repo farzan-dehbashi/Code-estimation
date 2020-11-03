@@ -1,0 +1,21 @@
+RESULTS SO FAR:
+
+This script is DFT.py
+
+../../../../../Desktop/Multimeter_SHARE/numpy_random_funcs_nosleep_mean_SUBSET_long/numpy_random_funcs_nosleep_mean_SUBSET_long_try 
+  	  -----> this gets 100% accuracy with 0.01 detection threshold
+		this is np.mean with a numpy array with size (1000,100,100)
+
+../../../../../Desktop/Multimeter_SHARE/numpy_random_funcs_nosleep_fft_SUBSET/numpy_random_funcs_nosleep_fft_SUBSET_try
+	  -----> This gets 100% accuracy with 0.01 detection threshold
+		this is np.fft.fft with a numpy array with size (524288)
+
+../../../../../Desktop/Multimeter_SHARE/numpy_random_funcs_nosleep_median_SUBSET_long/numpy_random_funcs_nosleep_median_SUBSET_long_try
+	  -----> This gets 100% accuracy with 0.01 detection threshold
+		this is np.median with numpy array with size (1000,100,100)
+
+max does not work well -> low accuracy of detection
+seems longer traces are better
+-input matters
+-function matters
+Q: does the data need to be the exact same? can it be different?
