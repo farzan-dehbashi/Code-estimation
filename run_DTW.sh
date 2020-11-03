@@ -1,16 +1,16 @@
 #!/bin/bash
 
 # RQ1
-# python3 DTW.py traces/numpy_random_funcs_nosleep_mean_SUBSET_long/numpy_random_funcs_nosleep_mean_SUBSET_long_try > rq1_mean.out
-# python3 DTW.py traces/numpy_random_funcs_nosleep_median_SUBSET_long/numpy_random_funcs_nosleep_median_SUBSET_long_try > rq1_median.out
-# python3 DTW.py traces/numpy_random_funcs_nosleep_fft_SUBSET/numpy_random_funcs_nosleep_fft_SUBSET_try > rq1_fft.out
-# python3 DTW.py traces/numpy_random_funcs_nosleep_max_SUBSET_long/numpy_random_funcs_nosleep_max_SUBSET_long_try > rq1_amax.out
+python3 DTW.py traces/numpy_random_funcs_nosleep_mean_SUBSET_long/numpy_random_funcs_nosleep_mean_SUBSET_long_try > rq1_mean.out
+python3 DTW.py traces/numpy_random_funcs_nosleep_median_SUBSET_long/numpy_random_funcs_nosleep_median_SUBSET_long_try > rq1_median.out
+python3 DTW.py traces/numpy_random_funcs_nosleep_fft_SUBSET/numpy_random_funcs_nosleep_fft_SUBSET_try > rq1_fft.out
+python3 DTW.py traces/numpy_random_funcs_nosleep_max_SUBSET_long/numpy_random_funcs_nosleep_max_SUBSET_long_try > rq1_amax.out
 
 # RQ2
-python3 DTW_numpy_tests.py traces/seed_numpy_tests_mean_sleep/seed_numpy_tests_mean_sleep_try > rq2_mean.out
-python3 DTW_numpy_tests.py traces/seed_numpy_tests_median_sleep/seed_numpy_tests_median_sleep_try > rq2_median.out
-python3 DTW_numpy_tests.py traces/seed_numpy_tests_fft_sleep/seed_numpy_tests_fft_sleep_try > rq2_fft.out
-python3 DTW_numpy_tests.py traces/seed_numpy_tests_max_sleep/seed_numpy_tests_max_sleep_try > rq2_amax.out
+# python3 DTW_numpy_tests.py traces/seed_numpy_tests_mean_sleep/seed_numpy_tests_mean_sleep_try > rq2_mean.out
+# python3 DTW_numpy_tests.py traces/seed_numpy_tests_median_sleep/seed_numpy_tests_median_sleep_try > rq2_median.out
+# python3 DTW_numpy_tests.py traces/seed_numpy_tests_fft_sleep/seed_numpy_tests_fft_sleep_try > rq2_fft.out
+# python3 DTW_numpy_tests.py traces/seed_numpy_tests_max_sleep/seed_numpy_tests_max_sleep_try > rq2_amax.out
 
 
 # RQ3
