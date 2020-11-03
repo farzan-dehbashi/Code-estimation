@@ -339,6 +339,9 @@ if mode == "noseed_numpy_random_funcs_max_try":
 training_trials = 3
 min_d_vals, labels = [], []
 all_min_d = []
+
+present_min_d, omitted_min_d = [], []
+
 # Grab the function from a trial
 for trial in range(0,10):
     print("Target: ", trial)
@@ -470,10 +473,12 @@ for trial in range(0,10):
             ACTUAL = True
             dot_color_ground = 'b'
             label = 1
+            present_min_d.append(min_d)
         else:
             ACTUAL = False
             dot_color_ground = 'r'
             label = 0
+            omitted_min_d.append(min_d)
 
         if trial < training_trials:
             min_d_vals.append(min_d)
@@ -499,11 +504,8 @@ for trial in range(0,10):
 
 
 
-        if trial >= training_trials:
-            # plt.scatter(min_d, 0.05, marker='o',s=90, color=dot_color_ground)
-            # plt.scatter(min_d, -0.05, marker='o',s=90, color=dot_color_classify)
-            plt.scatter(min_d, 0, marker='o',s=60, color=dot_color_ground)
-            # plt.scatter(min_d, 0, marker='o',s=60, color=dot_color_result)
+        # if trial >= training_trials:
+        #     plt.scatter(min_d, 0, marker='o',s=60, color=dot_color_ground)
 
         # for i, val in enumerate(s_min_n_idx[:10]):
         #     plt.axvline(x=val, color='g')
@@ -513,7 +515,8 @@ for trial in range(0,10):
         # exit()
 
 
-
+np.save(np.array(present_min_d), "present_min_d-"+mode+".npy")
+np.save(np.array(omitted_min_d), "present_min_d-"+mode+".npy")
 
 print()
 print("********** RESULTS **********")
@@ -553,23 +556,24 @@ print("F-Score: ", f1)
 
 
 # ----- graph with "actual" and "classified"
-legend_elements = [Line2D([0], [0], marker='o', color='w', label='Present',markerfacecolor='b', markersize=9),
-                   Line2D([0], [0], marker='o', color='w', label='Omitted', markerfacecolor='r', markersize=9)]
-
-plt.legend(handles=legend_elements,framealpha=1, fontsize=18,loc='center right')
-plt.title("Numpy Function: "+func_name, fontsize=25)
-plt.xlabel("d Value", fontsize=25)
-plt.xticks(fontsize=20)
-# plt.yticks([-0.05,0.05],["Classified", "Actual"],fontsize=25)
-plt.yticks([0],[""])
-plt.ylim(bottom=-0.05, top=0.05)
-
-last = np.sort(np.array(all_min_d))[-1]
-first = np.sort(np.array(all_min_d))[0]
-middle = (last - first) / 2
-
-plt.xlim(left=first*0.9, right= last*1.3)
-
-# plt.axhline(linewidth=2,color='k')
-plt.show()
-exit()
+# legend_elements = [Line2D([0], [0], marker='o', color='w', label='Present',markerfacecolor='b', markersize=9),
+#                    Line2D([0], [0], marker='o', color='w', label='Omitted', markerfacecolor='r', markersize=9)]
+#
+# plt.legend(handles=legend_elements,framealpha=1, fontsize=18,loc='center right')
+# plt.title("Numpy Function: "+func_name, fontsize=25)
+# plt.xlabel("d Value", fontsize=25)
+# plt.xticks(fontsize=20)
+# # plt.yticks([-0.05,0.05],["Classified", "Actual"],fontsize=25)
+# plt.yticks([0],[""])
+# plt.ylim(bottom=-0.05, top=0.05)
+#
+# last = np.sort(np.array(all_min_d))[-1]
+# first = np.sort(np.array(all_min_d))[0]
+# middle = (last - first) / 2
+#
+# plt.xlim(left=first*0.9, right= last*1.5)
+#
+# # plt.axhline(linewidth=2,color='k')
+# # plt.show()
+# # plt.savefig(fname,bbox_inches='tight', dpi=300)
+# exit()
