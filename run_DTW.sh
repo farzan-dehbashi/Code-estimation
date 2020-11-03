@@ -13,7 +13,6 @@ python3 DTW.py traces/numpy_random_funcs_nosleep_fft_SUBSET/numpy_random_funcs_n
 python3 DTW.py traces/numpy_random_funcs_nosleep_max_SUBSET_long/numpy_random_funcs_nosleep_max_SUBSET_long_try > rq3_amax.out
 
 
-
 # RQ4
 # python3 DTW.py traces/noseed_numpy_random_funcs_mean/noseed_numpy_random_funcs_mean_try > rq4_mean.out
 # python3 DTW.py traces/noseed_numpy_random_funcs_median/noseed_numpy_random_funcs_median_try > rq4_median.out
