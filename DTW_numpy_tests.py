@@ -327,7 +327,7 @@ for trial in range(0,10):
             inaccurate += 1
 
 
-        print("Accuracy: ", alg_detection, " - difference: ", time_diff)
+        print("Accuracy: ", alg_detection, " - difference: ", time_diff, " - idx: ", min_d_idx)
 
 
 
