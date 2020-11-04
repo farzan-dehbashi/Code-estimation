@@ -516,8 +516,8 @@ for trial in range(0,10):
         # exit()
 
 
-np.save(np.array(present_min_d), "present_min_d-"+mode+".npy")
-np.save(np.array(omitted_min_d), "omitted_min_d-"+mode+".npy")
+np.save("present_min_d-"+mode+".npy", np.array(present_min_d))
+np.save("omitted_min_d-"+mode+".npy", np.array(omitted_min_d))
 
 print()
 print("********** RESULTS **********")
