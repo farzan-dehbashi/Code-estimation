@@ -343,4 +343,4 @@ result_dict = {"Mode": mode,
                 "F1-Score": f1}
 
 with open("results/"+mode+'.txt', 'w') as file:
-     file.write(json.dumps(exDict))
+     file.write(json.dumps(result_dict))

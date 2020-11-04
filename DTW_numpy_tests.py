@@ -351,4 +351,4 @@ result_dict = {"Mode": mode,
                 "AVG_Time_Diff": avg_time_diff}
 
 with open("results/"+mode+'.txt', 'w') as file:
-     file.write(json.dumps(exDict))
+     file.write(json.dumps(result_dict))

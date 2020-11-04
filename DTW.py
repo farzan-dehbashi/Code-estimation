@@ -542,7 +542,7 @@ result_dict = {"Mode": mode,
                 "F1-Score": f1}
 
 with open("results/"+mode+'.txt', 'w') as file:
-     file.write(json.dumps(exDict))
+     file.write(json.dumps(result_dict))
 
 # conf mtx graph
 # legend_elements = [Line2D([0], [0], marker='o', color='w', label='TP',markerfacecolor='b', markersize=9),
