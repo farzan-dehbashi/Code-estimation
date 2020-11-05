@@ -284,7 +284,7 @@ for trial in range(0,10):
         start = f_end+300
         end = start + target.shape[0]
         step = 1
-        min_d = 10
+        min_d = 10000000000
         min_d_idx = 0
 
         min_med = 1000
@@ -327,7 +327,7 @@ for trial in range(0,10):
             inaccurate += 1
 
 
-        print("Accuracy: ", alg_detection, " - difference: ", time_diff, " - idx: ", min_d_idx)
+        print("Accuracy: ", alg_detection, " - difference: ", time_diff, " - idx: ", min_d_idx, " - min_d: ", min_d)
 
 
 
