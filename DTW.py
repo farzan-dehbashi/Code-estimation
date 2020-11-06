@@ -61,23 +61,71 @@ def calculateD(pass_arr):
     s = file_data[0][start:end]
     t = target
 
-    d, path = fastdtw(s, t, dist=euclidean)
+    from dtaidistance import dtw
+    from dtaidistance import dtw_visualisation as dtwvis
 
-    # n, m = len(s), len(t)
-    # dtw_matrix = np.zeros((n+1, m+1))
-    # for i in range(n+1):
-    #     for j in range(m+1):
-    #         dtw_matrix[i, j] = np.inf
-    # dtw_matrix[0, 0] = 0
+    # path = dtw.warping_path(s, t)
+    # dtwvis.plot_warping(s, t, path)
+
+    d, paths = dtw.warping_paths(s, t)
+    best_path = dtw.best_path(paths)
+    dtwvis.plot_warpingpaths(s, t, paths, best_path)
+
+    # import random
+    # x = np.arange(0, 20, .5)
+    # s1 = np.sin(x)
+    # s2 = np.sin(x - 1)
+    # random.seed(1)
+    # for idx in range(len(s2)):
+    #     if random.random() < 0.05:
+    #         s2[idx] += (random.random() - 0.5) / 2
     #
-    # for i in range(1, n+1):
-    #     for j in range(1, m+1):
-    #         cost = abs(s[i-1] - t[j-1])
-    #         # take last min from a square box
-    #         last_min = np.min([dtw_matrix[i-1, j], dtw_matrix[i, j-1], dtw_matrix[i-1, j-1]])
-    #         dtw_matrix[i, j] = cost + last_min
-    #
-    # cost = dtw_matrix[-1][-1]
+    # d, paths = dtw.warping_paths(s1, s2, window=25, psi=2)
+    # best_path = dtw.best_path(paths)
+    # dtwvis.plot_warpingpaths(s1, s2, paths, best_path)
+
+
+    plt.xlabel("Query Trace", fontsize=35)
+    plt.ylabel("Target Trace", fontsize=35)
+    plt.show()
+    exit()
+
+    # d, path = fastdtw(s, t, dist=euclidean)
+
+    n, m = len(s), len(t)
+    dtw_matrix = np.zeros((n+1, m+1))
+    for i in range(n+1):
+        for j in range(m+1):
+            dtw_matrix[i, j] = np.inf
+    dtw_matrix[0, 0] = 0
+
+    for i in range(1, n+1):
+        for j in range(1, m+1):
+            cost = abs(i-j) + abs(s[i-1] - t[j-1])
+            # cost = abs(s[i-1] - t[j-1])
+            # take last min from a square box
+            # last_min = np.min([dtw_matrix[i-1, j], dtw_matrix[i, j-1], dtw_matrix[i-1, j-1]])
+            dtw_matrix[i, j] = cost #+ last_min
+
+    cost_mtx = dtw_matrix[1:][:,1:]
+
+    path = [(0,0)]
+    # for i in range(0,cost_mtx.shape[0]):
+    while path[-1][0] < cost_mtx.shape[0]-1 and path[-1][1] < cost_mtx.shape[0]-1:
+        cur = path[-1]
+        dir = np.argmin([cost_mtx[cur[0]+1, cur[1]], cost_mtx[cur[0], cur[1]+1], cost_mtx[cur[0]+1, cur[1]+1]]) #down, right, diag
+        if dir == 0: path.append((cur[0]+1,cur[1]))
+        elif dir == 1: path.append((cur[0], cur[1]+1))
+        else: path.append((cur[0]+1, cur[1]+1))
+
+    for i in path:
+        cost_mtx[i[0],i[1]] = 100
+
+    plt.imshow(cost_mtx, cmap='gray')
+    plt.show()
+    exit()
+
+
     return {"d": d, "start": start, "end": end}
 
 
@@ -167,16 +215,16 @@ if mode == "numpy_random_funcs_nosleep_mean_SUBSET_try":
 if mode == "numpy_random_funcs_nosleep_fft_SUBSET_try":
     trace_check_str = "numpy_fft"
     func_name = "FFT"
-    nums = {0: [4489, 6351],
-            1: [4535, 6397],
-            2: [4549, 6476],
-            3: [4740, 6662],
-            4: [4492, 6507],
-            5: [4540, 6419],
-            6: [4114, 5992],
-            7: [4256, 6397],
-            8: [4633, 6514],
-            9: [4185, 6160]}
+    nums = {0: [4799, 6669],
+            1: [4395, 6247],
+            2: [4549, 6464],
+            3: [4741, 6654],
+            4: [4684, 6555],
+            5: [4540, 6410],
+            6: [4114, 5985],
+            7: [4519, 6389],
+            8: [4634, 6504],
+            9: [4281, 6151]}
 
 if mode == "numpy_random_funcs_nosleep_mean_SUBSET_long_try":
     trace_check_str = "mean"
@@ -434,6 +482,10 @@ for trial in range(0,10):
             pass_arr.append([start, end])
             start+=step
             end+=step
+
+
+        calculateD(pass_arr[0])
+        exit()
 
         cores = 40
         chunksize = 1
