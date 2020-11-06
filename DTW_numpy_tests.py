@@ -132,25 +132,25 @@ mode = sys.argv[-1].split("/")[-1]
 if mode == "seed_numpy_tests_mean_sleep_try":
     nums = {0: [6610, 6740],
             1: [6427, 6557],
-            2: [7090, 7224],
-            3: [6648, 6743],
+            2: [7091, 7226],
+            3: [6648, 6778],
             4: [6458, 6588],
             5: [5948, 6078],
-            6: [7190, 7320],
+            6: [7191, 7320],
             7: [7420, 7551],
-            8: [6627, 6758],
+            8: [6626, 6757],
             9: [6414, 6547]}
 
-    func_start = {0: 8441,
-                1: 8256,
-                2: 8923,
-                3: 8478,
-                4: 8286,
-                5: 7777,
-                6: 9019,
-                7: 9250,
-                8: 8456,
-                9: 8245}
+    func_start = {0: 8436,
+                1: 8251,
+                2: 8917,
+                3: 8474,
+                4: 8282,
+                5: 7771,
+                6: 9015,
+                7: 9245,
+                8: 8452,
+                9: 8241}
 
 # # seed_numpy_tests_median_sleep/seed_numpy_tests_median_sleep_try
 if mode == "seed_numpy_tests_median_sleep_try":
@@ -281,7 +281,7 @@ for trial in range(0,10):
         file_data.append(parseData(fname))
 
 
-        start = f_end+300
+        start = nums[try_num][1]+300 #f_end+300
         end = start + target.shape[0]
         step = 1
         min_d = 10000000000
