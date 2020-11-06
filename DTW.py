@@ -261,16 +261,16 @@ if mode == "numpy_random_funcs_nosleep_max_SUBSET_long_try":
 if mode == "numpy_random_funcs_nosleep_median_SUBSET_long_try":
     trace_check_str = "median"
     func_name = "Median"
-    nums = {0: [6754, 8018],
-            1: [7422, 8691],
-            2: [7529, 8798],
-            3: [7324, 8603],
-            4: [7285, 8614],
-            5: [7428, 8751],
-            6: [7075, 8371],
-            7: [7464, 8757],
-            8: [7627, 8894],
-            9: [7325, 8591]}
+    nums = {0: [6754, 8014],
+            1: [7424, 8688],
+            2: [7531, 8795],
+            3: [7328, 8587],
+            4: [7285, 8603],
+            5: [7428, 8745],
+            6: [7075, 8369],
+            7: [7465, 8755],
+            8: [7627, 8890],
+            9: [7325, 8596]}
 
 # ../../../../../Desktop/Multimeter_SHARE/numpy_mean_grow.csv
 # grow_nums = {0: [12687, 12705],
