@@ -500,7 +500,7 @@ for trial in range(0,10):
                 min_d = result["d"]
 
 
-
+        # showD(min_d_idx, (min_d_idx+target.shape[0]))
 
 
 
@@ -544,7 +544,7 @@ for trial in range(0,10):
             all_min_d.append(min_d)
 
 
-        print("ALGORITHM: ", alg_detection, "   ACTUAL: ", ACTUAL, " d: ", min_d)
+        print("ALGORITHM: ", alg_detection, "   ACTUAL: ", ACTUAL, " d: ", min_d, "idx: ", min_d_idx)
         if trial >= training_trials:
             if alg_detection and ACTUAL:
                 TP+=1
