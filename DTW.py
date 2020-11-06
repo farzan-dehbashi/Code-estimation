@@ -23,8 +23,8 @@ from scipy.spatial.distance import euclidean
 import multiprocessing as mp
 from multiprocessing import Pool
 
-from dtaidistance import dtw
-from dtaidistance import dtw_visualisation as dtwvis
+# from dtaidistance import dtw
+# from dtaidistance import dtw_visualisation as dtwvis
 
 
 
