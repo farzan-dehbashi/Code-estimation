@@ -154,27 +154,27 @@ if mode == "seed_numpy_tests_mean_sleep_try":
 
 # # seed_numpy_tests_median_sleep/seed_numpy_tests_median_sleep_try
 if mode == "seed_numpy_tests_median_sleep_try":
-    nums = {0: [6648, 7954],
-            1: [6860, 8169],
-            2: [6473, 7779],
-            3: [7037, 8343],
+    nums = {0: [6648, 7956],
+            1: [6860, 8171],
+            2: [6472, 7778],
+            3: [7037, 8345],
             4: [6810, 8116],
-            5: [6442, 7745],
+            5: [6442, 7746],
             6: [6525, 7833],
-            7: [6574, 7934],
-            8: [7753, 9064],
-            9: [6489, 7799]}
+            7: [6571, 7934],
+            8: [7753, 9062],
+            9: [6491, 7804]}
 
     func_start = {0: 11476, #THIS IS THE BEGINNING OF THE FUNCTION
                 1: 11689,
-                2: 11298,
+                2: 11297,
                 3: 11863,
-                4: 11634,
-                5: 11262,
+                4: 11635,
+                5: 11265,
                 6: 11353,
-                7: 11456,
+                7: 11454,
                 8: 12580,
-                9: 11316}
+                9: 11317}
 
 # seed_numpy_tests_fft_sleep/seed_numpy_tests_fft_sleep_try
 if mode == "seed_numpy_tests_fft_sleep_try":
