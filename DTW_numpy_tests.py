@@ -316,7 +316,7 @@ for trial in range(0,10):
         time_diff = np.absolute(min_d_idx - func_start[try_num])
 
 
-        if time_diff < 150:
+        if time_diff < 500:
             alg_detection = True
             dot_color_classify = 'b'
             accurate += 1
