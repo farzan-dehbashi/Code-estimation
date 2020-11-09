@@ -279,7 +279,7 @@ for trial in range(0,10):
         file_data.append(parseData(fname))
 
 
-        makePaperFigure(file_data, 11105, target.shape[0], f_start, f_end, target_extended)
+        # makePaperFigure(file_data, 11105, target.shape[0], f_start, f_end, target_extended)
 
 
         start = nums[try_num][1]+300 #f_end+300
