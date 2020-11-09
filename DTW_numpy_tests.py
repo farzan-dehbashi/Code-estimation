@@ -69,12 +69,12 @@ def makePaperFigure(file_data, min_d_idx, target_len, f_start, f_end, target_ext
     xtick_vals, xtick_labels = [],[]
 
     # power = np.concatenate((target_extended, file_data[0][min_d_idx-300:min_d_idx+(target_len+600)]), axis=0)     # FOR NP.AMAX
-    # power = np.concatenate((target_extended, file_data[0][7600:-1000]), axis=0)
-    # min_d_idx = min_d_idx-7600
-    # color_start = min_d_idx+target_extended.shape[0]
+    power = np.concatenate((target_extended, file_data[0][7600:-1000]), axis=0)
+    min_d_idx = min_d_idx-7600
+    color_start = min_d_idx+target_extended.shape[0]
 
-    power = np.concatenate((file_data[0][f_start-300:f_end+300], file_data[0][min_d_idx-300:min_d_idx+(target_len+300)]), axis=0)
-    color_start = 900+target_len
+    # power = np.concatenate((file_data[0][f_start-300:f_end+300], file_data[0][min_d_idx-300:min_d_idx+(target_len+300)]), axis=0)
+    # color_start = 900+target_len
 
     # power = np.concatenate((file_data[0][f_start-300:f_end+300], file_data[0][min_d_idx-300:min_d_idx+(target_len+300)]), axis=0)
     # power = file_data[0][f_start-300:-4000]#np.concatenate((file_data[0][f_start-300:f_end+300], file_data[0][min_d_idx-300:min_d_idx+(target_len+300)]), axis=0)
@@ -97,7 +97,7 @@ def makePaperFigure(file_data, min_d_idx, target_len, f_start, f_end, target_ext
     plt.title("Minimum d Value: Numpy Amax", fontsize=25)
     plt.ylabel("Watts",fontsize=25)
     plt.xlabel("Time (s)",fontsize=25)
-    plt.xticks(xtick_vals, xtick_labels,fontsize=22)
+    # plt.xticks(xtick_vals, xtick_labels,fontsize=22)
     plt.yticks(fontsize=22)
     plt.ylim(top=np.amax(power)+0.4)
     plt.xlim(left=0.0)
@@ -108,7 +108,7 @@ def makePaperFigure(file_data, min_d_idx, target_len, f_start, f_end, target_ext
     # #                     Patch(facecolor='blue',label='Large')]
     plt.legend(handles=legend_elements, framealpha=1, fontsize=18, loc='upper right')
     plt.show()
-    # exit()
+    exit()
 
 def getWidth(window_fft_diff, med_abs_val):
     argmax = np.argmax(window_fft_diff)
@@ -234,16 +234,16 @@ if mode == "seed_numpy_tests_max_sleep_try":
     #             7: 13878,
     #             8: 13946,
     #             9: 13946}
-    func_start = {0: 6633, # BEGINNING
-                1: 7224,
-                2: 6428,
-                3: 6503,
-                4: 7117,
-                5: 6742,
-                6: 7114,
-                7: 6908,
-                8: 6977,
-                9: 6977}
+    func_start = {0: 13404, # BEGINNING
+                1: 13959,
+                2: 13167,
+                3: 13239,
+                4: 13852,
+                5: 13481,
+                6: 13851,
+                7: 13646,
+                8: 13711,
+                9: 13711}
 
 
 
@@ -267,8 +267,6 @@ for trial in range(0,10):
     target = data[f_start:f_end]
     target_extended = data[(f_start-300):(f_end+300)]
 
-
-
     # loop through other traces and compare function to those others
     for try_num in range(0,10):
         # try_num = 9
@@ -279,6 +277,9 @@ for trial in range(0,10):
         file_data = []
         # for i in sys.argv[1:]:
         file_data.append(parseData(fname))
+
+
+        makePaperFigure(file_data, 11105, target.shape[0], f_start, f_end, target_extended)
 
 
         start = nums[try_num][1]+300 #f_end+300
