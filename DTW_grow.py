@@ -49,7 +49,7 @@ def calculateD(pass_arr):
     #         dtw_matrix[i, j] = cost + last_min
     #
     # cost = dtw_matrix[-1][-1]
-    return {"d": d, "start": start, "end": end}
+    return {"d": (d / (end-start)), "start": start, "end": end}
 
 
 def parseData(path):
@@ -200,8 +200,6 @@ for trial in range(0,len(grow_nums.keys())):
 
     # ----- Train on the smallest one
     if trial == training_trials:
-        print(len(min_d_vals))
-        print("labels: ", len(labels))
         min_d_vals = np.expand_dims(min_d_vals,axis=1)
         labels = np.expand_dims(labels,axis=1)
         clf = make_pipeline(StandardScaler(), SGDClassifier(max_iter=1000, tol=1e-3))
