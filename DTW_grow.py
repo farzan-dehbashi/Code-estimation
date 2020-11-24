@@ -317,7 +317,7 @@ for trial in range(0,len(grow_nums.keys())):
             dot_color_ground = 'r'
             label = 0
 
-        if try_num < training_trials:
+        if trial < training_trials:
         # if trial == training_num: #CHANGED
             min_d_vals.append(min_d)
             labels.append(label)
