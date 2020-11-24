@@ -199,6 +199,8 @@ for trial in range(0,len(grow_nums.keys())):
 
     # ----- Train on the smallest one
     if trial == training_trials:
+        print(len(min_d_vals))
+        print("labels: ", len(labels))
         min_d_vals = np.expand_dims(min_d_vals,axis=1)
         labels = np.expand_dims(labels,axis=1)
         clf = make_pipeline(StandardScaler(), SGDClassifier(max_iter=1000, tol=1e-3))
