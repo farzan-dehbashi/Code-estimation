@@ -183,6 +183,7 @@ training_trials = 2
 
 
 all_min_d = []
+min_d_vals, labels = [], []
 # Grab the function from a trial
 for trial in range(0,len(grow_nums.keys())):
     print("Target: ", trial)
@@ -206,7 +207,7 @@ for trial in range(0,len(grow_nums.keys())):
         clf = make_pipeline(StandardScaler(), SGDClassifier(max_iter=1000, tol=1e-3))
         clf.fit(min_d_vals, labels)
 
-    min_d_vals, labels = [], []
+
     # loop through other traces and compare function to those others
     for try_num in range(0,10):
         # print("trial: ", try_num)
@@ -321,7 +322,7 @@ for trial in range(0,len(grow_nums.keys())):
         # if trial == training_num: #CHANGED
             min_d_vals.append(min_d)
             labels.append(label)
-            print("len: ", len(labels))
+            # print("len: ", len(labels))
         else:
             all_min_d.append(min_d)
 
