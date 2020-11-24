@@ -321,6 +321,7 @@ for trial in range(0,len(grow_nums.keys())):
         # if trial == training_num: #CHANGED
             min_d_vals.append(min_d)
             labels.append(label)
+            print("len: ", len(labels))
         else:
             all_min_d.append(min_d)
 
