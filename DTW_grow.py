@@ -33,6 +33,7 @@ def calculateD(pass_arr):
 
     d, path = fastdtw(s, t, dist=euclidean)
 
+
     # n, m = len(s), len(t)
     # dtw_matrix = np.zeros((n+1, m+1))
     # for i in range(n+1):
@@ -176,7 +177,8 @@ if mode == "numpy_random_funcs_nosleep_max_SUBSET_long_try":
 
 
 # plt.figure(figsize=(14,2))
-training_nums = 4
+training_num = 0
+training_trials = 2
 
 
 
@@ -195,16 +197,24 @@ for trial in range(0,len(grow_nums.keys())):
     f_end = grow_nums[trial][1]
     target = data[f_start:f_end]
 
+    # ----- Train on the smallest one
+    if trial == training_trials:
+        min_d_vals = np.expand_dims(min_d_vals,axis=1)
+        labels = np.expand_dims(labels,axis=1)
+        clf = make_pipeline(StandardScaler(), SGDClassifier(max_iter=1000, tol=1e-3))
+        clf.fit(min_d_vals, labels)
+
     min_d_vals, labels = [], []
     # loop through other traces and compare function to those others
     for try_num in range(0,10):
+        # print("trial: ", try_num)
 
         # train logistic regression model
-        if try_num == training_nums:
-            min_d_vals = np.expand_dims(min_d_vals,axis=1)
-            labels = np.expand_dims(labels,axis=1)
-            clf = make_pipeline(StandardScaler(), SGDClassifier(max_iter=1000, tol=1e-3))
-            clf.fit(min_d_vals, labels)
+        # if try_num == training_nums:
+            # min_d_vals = np.expand_dims(min_d_vals,axis=1)
+            # labels = np.expand_dims(labels,axis=1)
+            # clf = make_pipeline(StandardScaler(), SGDClassifier(max_iter=1000, tol=1e-3))
+            # clf.fit(min_d_vals, labels)
 
 
         # try_num = 9
@@ -215,6 +225,7 @@ for trial in range(0,len(grow_nums.keys())):
         file_data = []
         # for i in sys.argv[1:]:
         file_data.append(parseData(fname))
+
 
         # if nums is None:
         #     offset = 6000 #4000
@@ -257,19 +268,27 @@ for trial in range(0,len(grow_nums.keys())):
             start+=step
             end+=step
 
+
         cores = 40
         chunksize = 1
         with Pool(processes=cores) as pool:
             results_d = pool.map(calculateD, pass_arr, chunksize)
 
+        # results_d = []
+        # for arr in pass_arr:
+        #     results_d.append(calculateD(arr))
+
+        # print(len(results_d))
+        # exit()
 
         for i, result in enumerate(results_d):
             if result["d"] < min_d:
                 min_d_idx = result["start"]
                 min_d = result["d"]
 
-
-        if try_num >= training_nums:
+        # ----- makes prediction if not training
+        if trial >= training_trials: #CHANGED
+        # if try_num != training_num:
             # ans = logisticRegr.predict(np.array([[min_d]]))[0]
             ans = clf.predict(np.array([[min_d]]))[0]
             if ans == 1:
@@ -296,7 +315,8 @@ for trial in range(0,len(grow_nums.keys())):
             dot_color_ground = 'r'
             label = 0
 
-        if try_num < training_nums:
+        if try_num < training_trials:
+        # if trial == training_num: #CHANGED
             min_d_vals.append(min_d)
             labels.append(label)
         else:
