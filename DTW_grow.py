@@ -341,9 +341,7 @@ for trial in range(0,len(grow_nums.keys())):
                 dot_color_result = 'r'
 
 
-precision = TP / (TP+FP)
-recall = TP / (TP + FN)
-f1 = 2 * ((precision * recall) / (precision + recall))
+
 
 print()
 print("********** RESULTS **********")
@@ -351,6 +349,9 @@ print("Experiment: ", fname_arr[-1][:-9])
 print()
 print("TP: ", TP, " TN: ", TN, " FP: ", FP, " FN: ", FN)
 print()
+precision = TP / (TP+FP)
+recall = TP / (TP + FN)
+f1 = 2 * ((precision * recall) / (precision + recall))
 print("Precision: ", precision)
 print("Recall: ", recall)
 print("F-Score: ", f1)
